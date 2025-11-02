@@ -1,4 +1,5 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
+import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -118,12 +119,15 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
   
-    // 1件なら移動、複数なら最初の1件に移動
-    await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     if (nextNotes.length === 1) {
+      // 1件なら移動
+      await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
-      const list = nextNotes.map(f => f.basename).join("\n");
-      new Notice(`複数の次ノートがあります（${nextNotes.length}件）。最初のノートに移動します:\n${list}`);
+      // 複数候補の場合はサジェストで選択
+      new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
+        await this.app.workspace.getLeaf().openFile(selectedFile);
+        new Notice(`次のノートに移動しました: ${selectedFile.basename}`);
+      }).open();
     }
   }
 }

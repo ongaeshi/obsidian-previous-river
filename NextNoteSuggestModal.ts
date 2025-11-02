@@ -1,0 +1,20 @@
+import { SuggestModal, App, TFile } from "obsidian";
+
+export class NextNoteSuggestModal extends SuggestModal<TFile> {
+  constructor(app: App, private options: TFile[], private onSelect: (file: TFile) => void) {
+    super(app);
+  }
+
+  getSuggestions(query: string): TFile[] {
+    // query に部分一致するものだけ返す（簡易絞り込み）
+    return this.options.filter(file => file.basename.toLowerCase().includes(query.toLowerCase()));
+  }
+
+  renderSuggestion(file: TFile, el: HTMLElement) {
+    el.createEl("div", { text: file.basename });
+  }
+
+  onChooseSuggestion(file: TFile, evt: MouseEvent | KeyboardEvent) {
+    this.onSelect(file);
+  }
+}
