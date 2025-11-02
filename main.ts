@@ -1,4 +1,4 @@
-import { Plugin, TFile, Notice } from "obsidian";
+import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -19,30 +19,56 @@ export default class PreviousRiverPlugin extends Plugin {
     return this.app.workspace.getActiveFile();
   }
 
+  /**
+   * Extracts the inner link text from an Obsidian-style link string such as "[[note]]" or "[[note|alias]]".
+   * Removes the surrounding [[...]] brackets if present and returns only the inner content.
+   *
+   * @param raw - The original link string, possibly enclosed in [[...]].
+   * @returns The inner link text (e.g., "note" or "note|alias").
+   */
+  extractLinkTarget(raw: string): string {
+    const trimmed = raw.trim();
+    const match = trimmed.match(/^\[\[(.+?)\]\]$/);
+    return match ? match[1] : trimmed;
+  }
+
   async goToPreviousNote() {
     const file = this.getActiveFile();
     if (!file) {
       new Notice("アクティブなノートがありません");
       return;
     }
-
-    const content = await this.app.vault.read(file);
-
-    // YAML frontmatter または行頭に "previous: [[ノート名]]" がある場合を探す
-    const match = content.match(/^previous:\s*\[\[(.+?)\]\]/m);
-    if (!match) {
+  
+    // YAML frontmatter を優先的にチェック
+    const cache = this.app.metadataCache.getFileCache(file);
+    let previousNoteName: string | null = null;
+  
+    if (cache?.frontmatter?.previous) {
+      previousNoteName = cache.frontmatter.previous;
+    } else {
+      // 本文から探す
+      const content = await this.app.vault.read(file);
+      const match = content.match(/^previous:\s*\[\[(.+?)\]\]/m);
+      if (match) {
+        previousNoteName = match[1];
+      }
+    }
+  
+    if (!previousNoteName) {
       new Notice("previous プロパティが見つかりません");
       return;
     }
-
-    const previousNoteName = match[1];
-    const target = this.app.metadataCache.getFirstLinkpathDest(previousNoteName, file.path);
-
+  
+    // [[note|alias]] のような場合をパース
+    const linkText = this.extractLinkTarget(previousNoteName);
+    const { path: linkpath } = parseLinktext(linkText);
+    const target = this.app.metadataCache.getFirstLinkpathDest(linkpath, file.path);
+  
     if (!target) {
       new Notice(`ノート「${previousNoteName}」が見つかりません`);
       return;
     }
-
+  
     await this.app.workspace.getLeaf().openFile(target);
   }
 
