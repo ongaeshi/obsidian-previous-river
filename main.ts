@@ -78,33 +78,52 @@ export default class PreviousRiverPlugin extends Plugin {
       new Notice("アクティブなノートがありません");
       return;
     }
-
-    // 🔍 バックリンク情報を取得
-    const backlinks = this.app.metadataCache.resolvedLinks;
+  
     const currentPath = file.path;
-
+    const backlinks = this.app.metadataCache.resolvedLinks;
     const nextNotes: TFile[] = [];
-
-    // resolvedLinks は { "noteA.md": { "noteB.md": count, ... } } のような構造
-    for (const [sourcePath, links] of Object.entries(backlinks)) {
-      if (links[currentPath]) {
-        const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
-        if (targetFile instanceof TFile) {
-          nextNotes.push(targetFile);
-        }
+  
+    for (const [sourcePath, targets] of Object.entries(backlinks)) {
+      // この source が現在のノートにリンクしているか
+      if (!targets[currentPath]) continue;
+  
+      const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
+      if (!(targetFile instanceof TFile)) continue;
+  
+      // そのファイルの previous プロパティを取得
+      const cache = this.app.metadataCache.getFileCache(targetFile);
+      let previousRaw: string | null = null;
+  
+      if (cache?.frontmatter?.previous) {
+        previousRaw = cache.frontmatter.previous;
+      } else {
+        const content = await this.app.vault.read(targetFile);
+        const match = content.match(/^previous:\s*(.+)$/m);
+        if (match) previousRaw = match[1];
+      }
+  
+      if (!previousRaw) continue;
+  
+      // [[...]] があれば外す
+      const previousLink = this.extractLinkTarget(previousRaw);
+  
+      // previous が現在のノートを指している場合のみ追加
+      if (previousLink === file.basename || previousLink === currentPath) {
+        nextNotes.push(targetFile);
       }
     }
-
+  
     if (nextNotes.length === 0) {
-      new Notice("次のノート（バックリンク）が見つかりません");
+      new Notice("次のノート（previous プロパティでリンクされているバックリンク）が見つかりません");
       return;
     }
-
+  
+    // 1件なら移動、複数なら最初の1件に移動
+    await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     if (nextNotes.length === 1) {
-      await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
       const list = nextNotes.map(f => f.basename).join("\n");
-      new Notice(`複数の次ノートがあります:\n${list}`);
+      new Notice(`複数の次ノートがあります（${nextNotes.length}件）。最初のノートに移動します:\n${list}`);
     }
   }
 }
