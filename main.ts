@@ -36,7 +36,6 @@ export default class PreviousRiverPlugin extends Plugin {
   async goToPreviousNote() {
     const file = this.getActiveFile();
     if (!file) {
-      new Notice("アクティブなノートがありません");
       return;
     }
   
@@ -56,7 +55,6 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     if (!previousNoteName) {
-      new Notice("previous プロパティが見つかりません");
       return;
     }
   
@@ -76,7 +74,6 @@ export default class PreviousRiverPlugin extends Plugin {
   async goToNextNote() {
     const file = this.getActiveFile();
     if (!file) {
-      new Notice("アクティブなノートがありません");
       return;
     }
   
@@ -115,7 +112,6 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     if (nextNotes.length === 0) {
-      new Notice("次のノート（previous プロパティでリンクされているバックリンク）が見つかりません");
       return;
     }
   
@@ -126,7 +122,6 @@ export default class PreviousRiverPlugin extends Plugin {
       // 複数候補の場合はサジェストで選択
       new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
         await this.app.workspace.getLeaf().openFile(selectedFile);
-        new Notice(`次のノートに移動しました: ${selectedFile.basename}`);
       }).open();
     }
   }
