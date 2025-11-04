@@ -1,5 +1,6 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
-import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
+import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
+import { extractLinkTarget } from "./lib/utils";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -18,19 +19,6 @@ export default class PreviousRiverPlugin extends Plugin {
 
   getActiveFile(): TFile | null {
     return this.app.workspace.getActiveFile();
-  }
-
-  /**
-   * Extracts the inner link text from an Obsidian-style link string such as "[[note]]" or "[[note|alias]]".
-   * Removes the surrounding [[...]] brackets if present and returns only the inner content.
-   *
-   * @param raw - The original link string, possibly enclosed in [[...]].
-   * @returns The inner link text (e.g., "note" or "note|alias").
-   */
-  extractLinkTarget(raw: string): string {
-    const trimmed = raw.trim();
-    const match = trimmed.match(/^\[\[(.+?)\]\]$/);
-    return match ? match[1] : trimmed;
   }
 
   async goToPreviousNote() {
@@ -59,7 +47,7 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     // [[note|alias]] のような場合をパース
-    const linkText = this.extractLinkTarget(previousNoteName);
+    const linkText = extractLinkTarget(previousNoteName);
     const { path: linkpath } = parseLinktext(linkText);
     const target = this.app.metadataCache.getFirstLinkpathDest(linkpath, file.path);
   
@@ -103,7 +91,7 @@ export default class PreviousRiverPlugin extends Plugin {
       if (!previousRaw) continue;
   
       // [[...]] があれば外す
-      const previousLink = this.extractLinkTarget(previousRaw);
+      const previousLink = extractLinkTarget(previousRaw);
   
       // previous が現在のノートを指している場合のみ追加
       if (previousLink === file.basename || previousLink === currentPath) {
