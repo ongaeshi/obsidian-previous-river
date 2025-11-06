@@ -1,7 +1,6 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { extractLinkText } from "./lib/utils";
-import { getActiveFile, getPreviousLinkText } from "./lib/obsidian";
+import { getActiveFile, getPreviousLinkText, getPreviousNote } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -24,20 +23,11 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
-    let previousLinkText = getPreviousLinkText(this.app, file);
-    if (!previousLinkText) {
-      return;
-    }
-  
-    const target = this.app.metadataCache.getFirstLinkpathDest(
-      previousLinkText, file.path
-      );
-  
+    const target = getPreviousNote(this.app, file);
     if (!target) {
-      new Notice(`ノート「${previousLinkText}」が見つかりません`);
       return;
     }
-  
+    
     await this.app.workspace.getLeaf().openFile(target);
   }
 

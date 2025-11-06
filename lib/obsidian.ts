@@ -26,3 +26,25 @@ export function getPreviousLinkText(app: App, file: TFile): string | null {
   // TODO: Support parseLinkText
   // const { path: linkPath, path: linkSubPath } = parseLinktext(previousLinkText);
 }
+
+/**
+ * Retrieve the previous note based on the `previous` property in the frontmatter.
+ */
+export function getPreviousNote(app: App, file: TFile): TFile | null {
+  const previousLinkText = getPreviousLinkText(app, file);
+  if (!previousLinkText) {
+    return null;
+  }
+
+  const target = app.metadataCache.getFirstLinkpathDest(
+    previousLinkText,
+    file.path
+  );
+
+  if (!target) {
+    new Notice(`ノート「${previousLinkText}」が見つかりません`); // TODO: i18n
+    return null;
+  }
+
+  return target;
+}
