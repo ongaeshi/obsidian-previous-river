@@ -10,9 +10,16 @@ export function getActiveFile(app: App): TFile | null {
 }
 
 /**
- * Retrieve the `previous` note name from the file's frontmatter.
+ * Retrieve the `previous` link text from the file's frontmatter.
+ * @returns Extracted link text from the `previous` property, or null if not found.
  */
-export async function getPreviousNoteName(app: App, file: TFile): Promise<string | null> {
+export function getPreviousLinkText(app: App, file: TFile): string | null {
   const cache = app.metadataCache.getFileCache(file);
-  return cache?.frontmatter?.previous;
+  const previousName = cache?.frontmatter?.previous;
+
+  if (previousName == null) {
+    return null;
+  }
+
+  return extractLinkText(previousName);
 }

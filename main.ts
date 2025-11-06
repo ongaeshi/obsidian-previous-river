@@ -1,7 +1,7 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { extractLinkText } from "./lib/utils";
-import { getActiveFile, getPreviousNoteName } from "./lib/obsidian";
+import { getActiveFile, getPreviousLinkText } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -24,19 +24,17 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
-    const cache = this.app.metadataCache.getFileCache(file);
-    let previousNoteName = await getPreviousNoteName(this.app, file);
-    if (!previousNoteName) {
+    let previousLinkText = getPreviousLinkText(this.app, file);
+    if (!previousLinkText) {
       return;
     }
   
     // [[note|alias]] のような場合をパース
-    const linkText = extractLinkText(previousNoteName);
-    const { path: linkpath } = parseLinktext(linkText);
+    const { path: linkpath } = parseLinktext(previousLinkText);
     const target = this.app.metadataCache.getFirstLinkpathDest(linkpath, file.path);
   
     if (!target) {
-      new Notice(`ノート「${previousNoteName}」が見つかりません`);
+      new Notice(`ノート「${previousLinkText}」が見つかりません`);
       return;
     }
   
@@ -59,26 +57,16 @@ export default class PreviousRiverPlugin extends Plugin {
   
       const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
       if (!(targetFile instanceof TFile)) continue;
-  
-      // そのファイルの previous プロパティを取得
-      const cache = this.app.metadataCache.getFileCache(targetFile);
-      let previousRaw: string | null = null;
-  
-      if (cache?.frontmatter?.previous) {
-        previousRaw = cache.frontmatter.previous;
-      } else {
-        const content = await this.app.vault.read(targetFile);
-        const match = content.match(/^previous:\s*(.+)$/m);
-        if (match) previousRaw = match[1];
+
+      let previousLinkText = getPreviousLinkText(this.app, targetFile);
+      if (!previousLinkText) {
+        continue;
       }
   
-      if (!previousRaw) continue;
-  
-      // [[...]] があれば外す
-      const previousLink = extractLinkText(previousRaw);
+      // TODO: Need parseLinktext?
   
       // previous が現在のノートを指している場合のみ追加
-      if (previousLink === file.basename || previousLink === currentPath) {
+      if (previousLinkText === file.basename || previousLinkText === currentPath) {
         nextNotes.push(targetFile);
       }
     }
