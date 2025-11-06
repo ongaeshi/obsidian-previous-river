@@ -1,6 +1,7 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { extractLinkTarget } from "./lib/utils";
+import { getActiveFile, getPreviousNoteName } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -17,31 +18,14 @@ export default class PreviousRiverPlugin extends Plugin {
     });
   }
 
-  getActiveFile(): TFile | null {
-    return this.app.workspace.getActiveFile();
-  }
-
   async goToPreviousNote() {
-    const file = this.getActiveFile();
+    const file = getActiveFile(this.app);
     if (!file) {
       return;
     }
-  
-    // YAML frontmatter を優先的にチェック
+
     const cache = this.app.metadataCache.getFileCache(file);
-    let previousNoteName: string | null = null;
-  
-    if (cache?.frontmatter?.previous) {
-      previousNoteName = cache.frontmatter.previous;
-    } else {
-      // 本文から探す
-      const content = await this.app.vault.read(file);
-      const match = content.match(/^previous:\s*\[\[(.+?)\]\]/m);
-      if (match) {
-        previousNoteName = match[1];
-      }
-    }
-  
+    let previousNoteName = await getPreviousNoteName(this.app, file);
     if (!previousNoteName) {
       return;
     }
@@ -60,7 +44,7 @@ export default class PreviousRiverPlugin extends Plugin {
   }
 
   async goToNextNote() {
-    const file = this.getActiveFile();
+    const file = getActiveFile(this.app);
     if (!file) {
       return;
     }
