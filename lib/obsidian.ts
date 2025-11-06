@@ -10,18 +10,9 @@ export function getActiveFile(app: App): TFile | null {
 }
 
 /**
- * Retrieve the `previous` note name from the file's frontmatter or body.
- * Frontmatter takes precedence.
+ * Retrieve the `previous` note name from the file's frontmatter.
  */
 export async function getPreviousNoteName(app: App, file: TFile): Promise<string | null> {
   const cache = app.metadataCache.getFileCache(file);
-
-  if (cache?.frontmatter?.previous) {
-    return cache.frontmatter.previous;
-  }
-
-  // If not in frontmatter, search the body
-  const content = await app.vault.read(file);
-  const match = content.match(/^previous:\s*\[\[(.+?)\]\]/m);
-  return match ? match[1] : null;
+  return cache?.frontmatter?.previous;
 }
