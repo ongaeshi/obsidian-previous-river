@@ -29,9 +29,9 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
   
-    // [[note|alias]] のような場合をパース
-    const { path: linkpath } = parseLinktext(previousLinkText);
-    const target = this.app.metadataCache.getFirstLinkpathDest(linkpath, file.path);
+    const target = this.app.metadataCache.getFirstLinkpathDest(
+      previousLinkText, file.path
+      );
   
     if (!target) {
       new Notice(`ノート「${previousLinkText}」が見つかりません`);
@@ -62,8 +62,6 @@ export default class PreviousRiverPlugin extends Plugin {
       if (!previousLinkText) {
         continue;
       }
-  
-      // TODO: Need parseLinktext?
   
       // previous が現在のノートを指している場合のみ追加
       if (previousLinkText === file.basename || previousLinkText === currentPath) {

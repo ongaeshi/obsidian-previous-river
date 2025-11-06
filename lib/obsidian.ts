@@ -22,4 +22,7 @@ export function getPreviousLinkText(app: App, file: TFile): string | null {
   }
 
   return extractLinkText(previousName);
+
+  // TODO: Support parseLinkText
+  // const { path: linkPath, path: linkSubPath } = parseLinktext(previousLinkText);
 }
