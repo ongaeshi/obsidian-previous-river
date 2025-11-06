@@ -1,6 +1,6 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { extractLinkTarget } from "./lib/utils";
+import { extractLinkText } from "./lib/utils";
 import { getActiveFile, getPreviousNoteName } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
@@ -31,7 +31,7 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     // [[note|alias]] のような場合をパース
-    const linkText = extractLinkTarget(previousNoteName);
+    const linkText = extractLinkText(previousNoteName);
     const { path: linkpath } = parseLinktext(linkText);
     const target = this.app.metadataCache.getFirstLinkpathDest(linkpath, file.path);
   
@@ -75,7 +75,7 @@ export default class PreviousRiverPlugin extends Plugin {
       if (!previousRaw) continue;
   
       // [[...]] があれば外す
-      const previousLink = extractLinkTarget(previousRaw);
+      const previousLink = extractLinkText(previousRaw);
   
       // previous が現在のノートを指している場合のみ追加
       if (previousLink === file.basename || previousLink === currentPath) {

@@ -6,7 +6,7 @@
  * @param raw - The original link string, possibly enclosed in [[...]].
  * @returns The inner link text (e.g., "note" or "note|alias").
  */
-export function extractLinkTarget(raw: string): string {
+export function extractLinkText(raw: string): string {
   const trimmed = raw.trim();
   const match = trimmed.match(/^\[\[(.+?)\]\]$/);
   return match ? match[1] : trimmed;

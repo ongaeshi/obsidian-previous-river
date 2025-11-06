@@ -1,6 +1,6 @@
 import type { App, TFile } from "obsidian";
 import { Notice, parseLinktext } from "obsidian";
-import { extractLinkTarget } from "./utils";
+import { extractLinkText } from "./utils";
 
 /**
  * Get the currently active file
