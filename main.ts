@@ -21,6 +21,12 @@ export default class PreviousRiverPlugin extends Plugin {
       name: "先頭のノートに移動",
       callback: () => this.goToFirstNote(),
     });
+
+    this.addCommand({
+      id: "go-to-last-note",
+      name: "末尾のノートに移動",
+      callback: () => this.goToLastNote(),
+    });
   }
 
   async goToPreviousNote() {
@@ -77,6 +83,42 @@ export default class PreviousRiverPlugin extends Plugin {
 
     if (firstNote !== file) {
       await this.app.workspace.getLeaf().openFile(firstNote);
+    }
+  }
+
+  async goToLastNote() {
+    const file = getActiveFile(this.app);
+    if (!file) {
+      return;
+    }
+
+    let lastNote = file;
+    while (true) {
+      const nextNotes = getNextNotes(this.app, lastNote);
+      if (nextNotes.length === 0) {
+        break;
+      }
+
+      if (nextNotes.length === 1) {
+        // 次のノートが1件ならそのまま移動
+        lastNote = nextNotes[0];
+      } else {
+        // 複数候補がある場合はサジェストで選択
+        const selectedNote = await new Promise<TFile | null>((resolve) => {
+          new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
+        });
+
+        if (!selectedNote) {
+          // ユーザーが選択をキャンセルした場合は終了
+          return;
+        }
+
+        lastNote = selectedNote;
+      }
+    }
+
+    if (lastNote !== file) {
+      await this.app.workspace.getLeaf().openFile(lastNote);
     }
   }
 }
