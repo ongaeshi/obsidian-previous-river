@@ -1,6 +1,6 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { getActiveFile, getPreviousLinkText, getPreviousNote } from "./lib/obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -43,27 +43,7 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
   
-    const currentPath = file.path;
-    const backlinks = this.app.metadataCache.resolvedLinks;
-    const nextNotes: TFile[] = [];
-  
-    for (const [sourcePath, targets] of Object.entries(backlinks)) {
-      // この source が現在のノートにリンクしているか
-      if (!targets[currentPath]) continue;
-  
-      const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
-      if (!(targetFile instanceof TFile)) continue;
-
-      let previousLinkText = getPreviousLinkText(this.app, targetFile);
-      if (!previousLinkText) {
-        continue;
-      }
-  
-      // previous が現在のノートを指している場合のみ追加
-      if (previousLinkText === file.basename || previousLinkText === currentPath) {
-        nextNotes.push(targetFile);
-      }
-    }
+    const nextNotes = getNextNotes(this.app, file);
   
     if (nextNotes.length === 0) {
       return;

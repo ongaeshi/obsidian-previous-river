@@ -1,4 +1,4 @@
-import type { App, TFile } from "obsidian";
+import { App, TFile } from "obsidian";
 import { Notice, parseLinktext } from "obsidian";
 import { extractLinkText } from "./utils";
 
@@ -47,4 +47,34 @@ export function getPreviousNote(app: App, file: TFile): TFile | null {
   }
 
   return target;
+}
+
+export function getNextNotes(app: App, file: TFile): TFile[] {
+  const currentPath = file.path;
+  const backlinks = app.metadataCache.resolvedLinks;
+  const nextNotes: TFile[] = [];
+
+  for (const [sourcePath, targets] of Object.entries(backlinks)) {
+    // この source が現在のノートにリンクしているか
+    if (!targets[currentPath]) {
+      continue;
+    }
+
+    const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
+    if (!(targetFile instanceof TFile)) { 
+      continue;
+    }
+
+    let previousLinkText = getPreviousLinkText(this.app, targetFile);
+    if (!previousLinkText) {
+      continue;
+    }
+
+    // previous が現在のノートを指している場合のみ追加
+    if (previousLinkText === file.basename || previousLinkText === currentPath) {
+      nextNotes.push(targetFile);
+    }
+  }
+
+  return nextNotes;
 }
