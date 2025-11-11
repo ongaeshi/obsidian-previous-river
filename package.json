@@ -4,8 +4,10 @@
 	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
 	"main": "main.js",
 	"scripts": {
+		"check": "npx tsc --noEmit",
 		"build": "esbuild main.ts --bundle --outdir=build --external:obsidian --format=cjs --target=es2020 --platform=node && npm run copy",
-		"copy": "powershell -Command \"New-Item -ItemType Directory -Force -Path $env:USERPROFILE\\Doc\\notes\\.obsidian\\plugins\\previous-river | Out-Null; Copy-Item -Path build\\main.js, manifest.json, styles.css -Destination $env:USERPROFILE\\Doc\\notes\\.obsidian\\plugins\\previous-river\\ -Force\""
+		"copy": "powershell -Command \"New-Item -ItemType Directory -Force -Path tests\\vault\\previous-river-test\\.obsidian\\plugins\\previous-river | Out-Null; Copy-Item -Path build\\main.js, manifest.json, styles.css -Destination tests\\vault\\previous-river-test\\.obsidian\\plugins\\previous-river -Force\"",
+		"copy-to-notes": "powershell -Command \"New-Item -ItemType Directory -Force -Path $env:USERPROFILE\\Doc\\notes\\.obsidian\\plugins\\previous-river | Out-Null; Copy-Item -Path build\\main.js, manifest.json, styles.css -Destination $env:USERPROFILE\\Doc\\notes\\.obsidian\\plugins\\previous-river\\ -Force\""
 	},
 	"keywords": [],
 	"author": "",
