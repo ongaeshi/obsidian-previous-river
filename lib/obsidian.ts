@@ -1,5 +1,5 @@
 import { App, TFile } from "obsidian";
-import { Notice, parseLinktext } from "obsidian";
+import { Notice, getLinkpath, parseLinktext } from "obsidian";
 import { extractLinkText } from "./utils";
 
 /**
@@ -21,7 +21,7 @@ export function getPreviousLinkText(app: App, file: TFile): string | null {
     return null;
   }
 
-  return extractLinkText(previousName);
+  return  getLinkpath(extractLinkText(previousName));
 
   // TODO: Support parseLinkText
   // const { path: linkPath, path: linkSubPath } = parseLinktext(previousLinkText);
