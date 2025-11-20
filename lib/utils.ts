@@ -1,14 +1,22 @@
-
 /**
- * Extracts the inner link text from an Obsidian-style link string such as "[[note]]" or "[[note|alias]]".
- * Removes the surrounding [[...]] brackets if present and returns only the inner content.
- *
- * @param raw - The original link string, possibly enclosed in [[...]].
- * @returns The inner link text (e.g., "note" or "note|alias").
+ * Extracts the "linktext" portion from an Obsidian-style wiki link.
+ * Removes surrounding [[...]] and strips the alias ("|alias") if present.
+ * 
+ * Examples:
+ *   "[[note]]"               → "note"
+ *   "[[note|alias]]"         → "note"
+ *   "[[file#heading|alias]]" → "file#heading"
+ *   "note"                   → "note"
  */
 export function extractLinkText(raw: string): string {
   const trimmed = raw.trim();
-  const match = trimmed.match(/^\[\[(.+?)\]\]$/);
-  return match ? match[1] : trimmed;
-}
 
+  // Remove [[...]] wrapper
+  const innerMatch = trimmed.match(/^\[\[([^]*)\]\]$/);
+  const inner = innerMatch ? innerMatch[1].trim() : trimmed;
+
+  // Remove alias part (anything after the first "|")
+  const [linktext] = inner.split("|");
+
+  return linktext.trim();
+}
