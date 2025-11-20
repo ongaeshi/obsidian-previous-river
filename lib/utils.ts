@@ -8,7 +8,7 @@
  *   "[[file#heading|alias]]" → "file#heading"
  *   "note"                   → "note"
  */
-export function extractLinkText(raw: string): string {
+export function extractLinktext(raw: string): string {
   const trimmed = raw.trim();
 
   // Remove [[...]] wrapper
