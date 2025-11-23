@@ -1,6 +1,6 @@
 import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { getActiveFile, getPreviousLinkText, getPreviousNote } from "./lib/obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   async onload() {
@@ -20,6 +20,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "go-to-first-note",
       name: "先頭のノートに移動",
       callback: () => this.goToFirstNote(),
+    });
+
+    this.addCommand({
+      id: "go-to-last-note",
+      name: "末尾のノートに移動",
+      callback: () => this.goToLastNote(),
     });
   }
 
@@ -43,27 +49,7 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
   
-    const currentPath = file.path;
-    const backlinks = this.app.metadataCache.resolvedLinks;
-    const nextNotes: TFile[] = [];
-  
-    for (const [sourcePath, targets] of Object.entries(backlinks)) {
-      // この source が現在のノートにリンクしているか
-      if (!targets[currentPath]) continue;
-  
-      const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
-      if (!(targetFile instanceof TFile)) continue;
-
-      let previousLinkText = getPreviousLinkText(this.app, targetFile);
-      if (!previousLinkText) {
-        continue;
-      }
-  
-      // previous が現在のノートを指している場合のみ追加
-      if (previousLinkText === file.basename || previousLinkText === currentPath) {
-        nextNotes.push(targetFile);
-      }
-    }
+    const nextNotes = getNextNotes(this.app, file);
   
     if (nextNotes.length === 0) {
       return;
@@ -97,6 +83,42 @@ export default class PreviousRiverPlugin extends Plugin {
 
     if (firstNote !== file) {
       await this.app.workspace.getLeaf().openFile(firstNote);
+    }
+  }
+
+  async goToLastNote() {
+    const file = getActiveFile(this.app);
+    if (!file) {
+      return;
+    }
+
+    let lastNote = file;
+    while (true) {
+      const nextNotes = getNextNotes(this.app, lastNote);
+      if (nextNotes.length === 0) {
+        break;
+      }
+
+      if (nextNotes.length === 1) {
+        // 次のノートが1件ならそのまま移動
+        lastNote = nextNotes[0];
+      } else {
+        // 複数候補がある場合はサジェストで選択
+        const selectedNote = await new Promise<TFile | null>((resolve) => {
+          new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
+        });
+
+        if (!selectedNote) {
+          // ユーザーが選択をキャンセルした場合は終了
+          return;
+        }
+
+        lastNote = selectedNote;
+      }
+    }
+
+    if (lastNote !== file) {
+      await this.app.workspace.getLeaf().openFile(lastNote);
     }
   }
 }
