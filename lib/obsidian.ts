@@ -17,7 +17,7 @@ export function getPreviousLinkpath(app: App, file: TFile): string | null {
   const cache = app.metadataCache.getFileCache(file);
   const previousName = cache?.frontmatter?.previous;
 
-  if (previousName == null) {
+  if (!previousName?.includes("[[")) {
     return null;
   }
 
