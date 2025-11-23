@@ -72,10 +72,11 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
+    const startNote = file;
     let firstNote = file;
     while (true) {
       const previousNote = getPreviousNote(this.app, firstNote);
-      if (!previousNote) {
+      if (!previousNote || previousNote === startNote) {
         break;
       }
       firstNote = previousNote;
@@ -92,10 +93,11 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
+    const startNote = file;
     let lastNote = file;
     while (true) {
       const nextNotes = getNextNotes(this.app, lastNote);
-      if (nextNotes.length === 0) {
+      if (nextNotes.length === 0 || nextNotes.includes(startNote)) {
         break;
       }
 
