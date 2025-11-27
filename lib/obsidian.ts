@@ -60,12 +60,12 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
       continue;
     }
 
-    const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
+    const targetFile = app.vault.getAbstractFileByPath(sourcePath);
     if (!(targetFile instanceof TFile)) {
       continue;
     }
 
-    const previousLinkText = getPreviousLinkpath(this.app, targetFile);
+    const previousLinkText = getPreviousLinkpath(app, targetFile);
     if (!previousLinkText) {
       continue;
     }
