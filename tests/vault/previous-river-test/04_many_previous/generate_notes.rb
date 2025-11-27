@@ -14,13 +14,13 @@ def generate_notes(directory, name, count)
         end
         current_note = "#{name}_#{format('%02d', i)}.md"
 
-        content = <<~MARKDOWN
+        content = <<~MARKDOWN.chomp + "\n"
             ---
             previous: "#{previous_value}"
             ---
         MARKDOWN
 
-        File.write(File.join(directory, current_note), content)
+        File.open(File.join(directory, current_note), 'wb') { |file| file.write(content) }
     end
 end
 

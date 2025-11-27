@@ -1,4 +1,4 @@
-import { Plugin, TFile } from "obsidian";
+import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
@@ -6,25 +6,25 @@ export default class PreviousRiverPlugin extends Plugin {
   async onload() {
     this.addCommand({
       id: "go-to-previous-note",
-      name: "Go to previous note",
+      name: "前のノートに移動",
       callback: () => this.goToPreviousNote(),
     });
 
     this.addCommand({
       id: "go-to-next-note",
-      name: "Go to next note",
+      name: "次のノートに移動",
       callback: () => this.goToNextNote(),
     });
 
     this.addCommand({
       id: "go-to-first-note",
-      name: "Go to first note",
+      name: "先頭のノートに移動",
       callback: () => this.goToFirstNote(),
     });
 
     this.addCommand({
       id: "go-to-last-note",
-      name: "Go to last note",
+      name: "末尾のノートに移動",
       callback: () => this.goToLastNote(),
     });
   }
@@ -56,10 +56,10 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     if (nextNotes.length === 1) {
-      // If only one candidate exists, open it directly.
+      // 1件なら移動
       await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
-      // If multiple candidates exist, open a suggestion modal.
+      // 複数候補の場合はサジェストで選択
       new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
         await this.app.workspace.getLeaf().openFile(selectedFile);
       }).open();
@@ -102,16 +102,16 @@ export default class PreviousRiverPlugin extends Plugin {
       }
 
       if (nextNotes.length === 1) {
-        // If only one next note exists, follow it.
+        // 次のノートが1件ならそのまま移動
         lastNote = nextNotes[0];
       } else {
-        // If multiple candidates exist, open a suggestion modal.
+        // 複数候補がある場合はサジェストで選択
         const selectedNote = await new Promise<TFile | null>((resolve) => {
           new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
         });
 
         if (!selectedNote) {
-          // If the user cancels selection, stop.
+          // ユーザーが選択をキャンセルした場合は終了
           return;
         }
 
