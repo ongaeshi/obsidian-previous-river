@@ -1,71 +1,34 @@
-import { Plugin, TFile } from "obsidian";
+import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
-  translations: Record<string, string> = {};
-
   async onload() {
-    await this.loadTranslations();
-
     this.addCommand({
       id: "go-to-previous-note",
-      name: this.t("CMD_GO_TO_PREVIOUS_NOTE"),
+      name: "前のノートに移動",
       callback: () => this.goToPreviousNote(),
     });
 
     this.addCommand({
       id: "go-to-next-note",
-      name: this.t("CMD_GO_TO_NEXT_NOTE"),
+      name: "次のノートに移動",
       callback: () => this.goToNextNote(),
     });
 
     this.addCommand({
       id: "go-to-first-note",
-      name: this.t("CMD_GO_TO_FIRST_NOTE"),
+      name: "先頭のノートに移動",
       callback: () => this.goToFirstNote(),
     });
 
     this.addCommand({
       id: "go-to-last-note",
-      name: this.t("CMD_GO_TO_LAST_NOTE"),
+      name: "末尾のノートに移動",
       callback: () => this.goToLastNote(),
     });
   }
 
-  /**
-   * Load translation data for the current locale.
-   */
-  async loadTranslations() {
-    const locale = this.app.locale || "en";
-
-    // Obsidian injects translation objects into the plugin instance
-    // @ts-ignore
-    const injected = (this as any).translations;
-
-    if (injected && injected[locale]) {
-      this.translations = injected[locale];
-    } else if (injected && injected["en"]) {
-      this.translations = injected["en"];
-    } else {
-      this.translations = {};
-    }
-  }
-
-  /**
-   * Translation helper
-   */
-  t(key: string): string {
-    if (this.translations[key]) {
-      return this.translations[key];
-    } else {
-      return key;
-    }
-  }
-
-  /**
-   * Move to previous note.
-   */
   async goToPreviousNote() {
     const file = getActiveFile(this.app);
     if (!file) {
@@ -80,40 +43,29 @@ export default class PreviousRiverPlugin extends Plugin {
     await this.app.workspace.getLeaf().openFile(target);
   }
 
-  /**
-   * Move to next note.
-   * Show suggestion modal if multiple candidates exist.
-   */
   async goToNextNote() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
     }
-
+  
     const nextNotes = getNextNotes(this.app, file);
-
+  
     if (nextNotes.length === 0) {
       return;
     }
-
+  
     if (nextNotes.length === 1) {
+      // 1件なら移動
       await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
-      new NextNoteSuggestModal(
-        this.app,
-        nextNotes,
-        async (selectedFile) => {
-          if (selectedFile) {
-            await this.app.workspace.getLeaf().openFile(selectedFile);
-          }
-        }
-      ).open();
+      // 複数候補の場合はサジェストで選択
+      new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
+        await this.app.workspace.getLeaf().openFile(selectedFile);
+      }).open();
     }
   }
 
-  /**
-   * Move to the first note in the chain.
-   */
   async goToFirstNote() {
     const file = getActiveFile(this.app);
     if (!file) {
@@ -122,18 +74,11 @@ export default class PreviousRiverPlugin extends Plugin {
 
     const startNote = file;
     let firstNote = file;
-
     while (true) {
       const previousNote = getPreviousNote(this.app, firstNote);
-
-      if (!previousNote) {
+      if (!previousNote || previousNote === startNote) {
         break;
       }
-
-      if (previousNote === startNote) {
-        break;
-      }
-
       firstNote = previousNote;
     }
 
@@ -142,10 +87,6 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   }
 
-  /**
-   * Move to the last note in the chain.
-   * If branching occurs, show suggestion modal.
-   */
   async goToLastNote() {
     const file = getActiveFile(this.app);
     if (!file) {
@@ -154,26 +95,23 @@ export default class PreviousRiverPlugin extends Plugin {
 
     const startNote = file;
     let lastNote = file;
-
     while (true) {
       const nextNotes = getNextNotes(this.app, lastNote);
-
-      if (nextNotes.length === 0) {
-        break;
-      }
-
-      if (nextNotes.includes(startNote)) {
+      if (nextNotes.length === 0 || nextNotes.includes(startNote)) {
         break;
       }
 
       if (nextNotes.length === 1) {
+        // 次のノートが1件ならそのまま移動
         lastNote = nextNotes[0];
       } else {
+        // 複数候補がある場合はサジェストで選択
         const selectedNote = await new Promise<TFile | null>((resolve) => {
           new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
         });
 
         if (!selectedNote) {
+          // ユーザーが選択をキャンセルした場合は終了
           return;
         }
 
