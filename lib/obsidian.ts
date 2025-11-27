@@ -3,7 +3,7 @@ import { Notice, getLinkpath } from "obsidian";
 import { extractLinktext } from "./utils";
 
 /**
- * Get the currently active file
+ * Get the currently active file.
  */
 export function getActiveFile(app: App): TFile | null {
   return app.workspace.getActiveFile();
@@ -21,7 +21,7 @@ export function getPreviousLinkpath(app: App, file: TFile): string | null {
     return null;
   }
 
-  return  getLinkpath(extractLinktext(previousName));
+  return getLinkpath(extractLinktext(previousName));
 }
 
 /**
@@ -39,35 +39,38 @@ export function getPreviousNote(app: App, file: TFile): TFile | null {
   );
 
   if (!target) {
-    new Notice(`ノート「${previousLinkpath}」が見つかりません`); // TODO: i18n
+    new Notice(`Note "${previousLinkpath}" was not found.`);
     return null;
   }
 
   return target;
 }
 
+/**
+ * Retrieve notes that list the current file as their `previous` note.
+ */
 export function getNextNotes(app: App, file: TFile): TFile[] {
   const currentPath = file.path;
   const backlinks = app.metadataCache.resolvedLinks;
   const nextNotes: TFile[] = [];
 
   for (const [sourcePath, targets] of Object.entries(backlinks)) {
-    // この source が現在のノートにリンクしているか
+    // Check if the source note links to the current note.
     if (!targets[currentPath]) {
       continue;
     }
 
     const targetFile = this.app.vault.getAbstractFileByPath(sourcePath);
-    if (!(targetFile instanceof TFile)) { 
+    if (!(targetFile instanceof TFile)) {
       continue;
     }
 
-    let previousLinkText = getPreviousLinkpath(this.app, targetFile);
+    const previousLinkText = getPreviousLinkpath(this.app, targetFile);
     if (!previousLinkText) {
       continue;
     }
 
-    // previous が現在のノートを指している場合のみ追加
+    // Add only if the `previous` field points to the current note.
     if (previousLinkText === file.basename || previousLinkText === currentPath) {
       nextNotes.push(targetFile);
     }

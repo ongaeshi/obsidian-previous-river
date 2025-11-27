@@ -6,25 +6,25 @@ export default class PreviousRiverPlugin extends Plugin {
   async onload() {
     this.addCommand({
       id: "go-to-previous-note",
-      name: "前のノートに移動",
+      name: "Go to previous note",
       callback: () => this.goToPreviousNote(),
     });
 
     this.addCommand({
       id: "go-to-next-note",
-      name: "次のノートに移動",
+      name: "Go to next note",
       callback: () => this.goToNextNote(),
     });
 
     this.addCommand({
       id: "go-to-first-note",
-      name: "先頭のノートに移動",
+      name: "Go to first note",
       callback: () => this.goToFirstNote(),
     });
 
     this.addCommand({
       id: "go-to-last-note",
-      name: "末尾のノートに移動",
+      name: "Go to last note",
       callback: () => this.goToLastNote(),
     });
   }
@@ -56,10 +56,10 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   
     if (nextNotes.length === 1) {
-      // 1件なら移動
+      // If only one candidate exists, open it directly.
       await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
-      // 複数候補の場合はサジェストで選択
+      // If multiple candidates exist, open a suggestion modal.
       new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
         await this.app.workspace.getLeaf().openFile(selectedFile);
       }).open();
@@ -102,16 +102,16 @@ export default class PreviousRiverPlugin extends Plugin {
       }
 
       if (nextNotes.length === 1) {
-        // 次のノートが1件ならそのまま移動
+        // If only one next note exists, follow it.
         lastNote = nextNotes[0];
       } else {
-        // 複数候補がある場合はサジェストで選択
+        // If multiple candidates exist, open a suggestion modal.
         const selectedNote = await new Promise<TFile | null>((resolve) => {
           new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
         });
 
         if (!selectedNote) {
-          // ユーザーが選択をキャンセルした場合は終了
+          // If the user cancels selection, stop.
           return;
         }
 
