@@ -1,4 +1,4 @@
-import { Plugin, TFile, Notice, parseLinktext } from "obsidian";
+import { Plugin, TFile } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
