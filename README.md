@@ -1,30 +1,32 @@
 # Previous River
 
-A plugin for Obsidian that allows you to navigate between notes based on their `previous` property or backlinks.
+An Obsidian plugin that enables navigation between notes using the `previous` property in frontmatter or backlinks.
+
+<img width="640" src="https://github.com/user-attachments/assets/db3d5466-affd-43de-aebe-b5d4757e08ac" />
 
 ## Features
 
-### Go to Previous Note
-Navigate to the note linked in the `previous` property of the current note's frontmatter.
+### Go to previous Note
+Jump to the note specified in the `previous` property of the current note's frontmatter.
 
-### Go to Next Note
-Navigate to notes that backlink to the current note and have their `previous` property pointing to the current note.  
+### Go to next Note
+Move to notes that backlink to the current note and have their `previous` property pointing to it.  
+If multiple candidates exist, a suggestion modal will allow you to choose.
+
+### Go to first Note
+Follow the `previous` property chain to reach the first note in the sequence.
+
+### Go to last Note
+Use backlinks to find the last note in the sequence.  
 If there are multiple candidates, a suggestion modal will appear for selection.
 
-### Go to First Note
-Traverse the `previous` property chain to navigate to the first note in the sequence.
+## Recommended Hotkeys
 
-### Go to Last Note
-Traverse the backlinks to navigate to the last note in the sequence.  
-If there are multiple candidates, a suggestion modal will appear for selection.
+- **Go to previous Note**: `Alt+,`
+- **Go to next Note**: `Alt+.`
+- **Go to first Note**: `Alt+Shift+,`
+- **Go to last Note**: `Alt+Shift+.`
 
-## Hotkeys (Recommend)
+## Contributing
 
-- **Go to Previous Note**: `Alt+,`
-- **Go to Next Note**: `Alt+.`
-- **Go to First Note**: `Alt+Shift+,`
-- **Go to Last Note**: `Alt+Shift+.`
-
-### Contributing
-
-Bug reports and feature requests are welcome via Issues. Pull requests are also appreciated!
+Feel free to submit bug reports and feature requests via Issues. Contributions through pull requests are also highly appreciated!
