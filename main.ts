@@ -3,7 +3,7 @@ import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
-  async onload() {
+  onload() {
     this.addCommand({
       id: "go-to-previous-note",
       name: "Go to previous note",
@@ -60,8 +60,8 @@ export default class PreviousRiverPlugin extends Plugin {
       await this.app.workspace.getLeaf().openFile(nextNotes[0]);
     } else {
       // If multiple candidates exist, open a suggestion modal.
-      new NextNoteSuggestModal(this.app, nextNotes, async (selectedFile) => {
-        await this.app.workspace.getLeaf().openFile(selectedFile);
+      new NextNoteSuggestModal(this.app, nextNotes, (selectedFile) => {
+        this.app.workspace.getLeaf().openFile(selectedFile);
       }).open();
     }
   }
