@@ -61,7 +61,7 @@ export default class PreviousRiverPlugin extends Plugin {
     } else {
       // If multiple candidates exist, open a suggestion modal.
       new NextNoteSuggestModal(this.app, nextNotes, (selectedFile) => {
-        this.app.workspace.getLeaf().openFile(selectedFile);
+        void this.app.workspace.getLeaf().openFile(selectedFile);
       }).open();
     }
   }
