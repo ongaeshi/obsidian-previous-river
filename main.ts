@@ -1,4 +1,4 @@
-import { Plugin, TFile } from "obsidian";
+import { Notice, Plugin, TFile } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
 
@@ -26,6 +26,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "go-to-last-note",
       name: "Go to last note",
       callback: () => this.goToLastNote(),
+    });
+
+    this.addCommand({
+      id: "detach-note",
+      name: "Detach note",
+      callback: () => this.detachNote(),
     });
   }
 
@@ -122,5 +128,14 @@ export default class PreviousRiverPlugin extends Plugin {
     if (lastNote !== file) {
       await this.app.workspace.getLeaf().openFile(lastNote);
     }
+  }
+
+  async detachNote() {
+    const file = getActiveFile(this.app);
+    if (!file) {
+      return;
+    }
+
+    new Notice(`Detach from "${file.path}" is not implemented yet.`);
   }
 }
