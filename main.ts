@@ -1,6 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { getActiveFile, getPreviousNote, getNextNotes } from "./lib/obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes, detachNote } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   onload() {
@@ -136,6 +136,7 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
-    new Notice(`Detach from "${file.path}" is not implemented yet.`);
+    // TODO: Add confirm dialog
+    await detachNote(this.app, file);
   }
 }

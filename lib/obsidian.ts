@@ -78,3 +78,20 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
 
   return nextNotes;
 }
+
+export async function detachNote(app: App, file: TFile): Promise<void> {
+  try {
+    await app.fileManager.processFrontMatter(file, (fm) => {
+      fm.previous = "ROOT";
+    });
+
+    new Notice(`Detached: previous → ROOT`);
+  } catch (err) {
+    console.error(err);
+    new Notice(`Failed to detach note`);
+  }
+
+  // TODO:
+  // 1. If nextNotes() is not open, open it first.
+  // 2. Set previousNote() to next notes previous properties.
+}
