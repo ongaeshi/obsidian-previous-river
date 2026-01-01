@@ -7,31 +7,31 @@ export default class PreviousRiverPlugin extends Plugin {
     this.addCommand({
       id: "go-to-previous-note",
       name: "Go to previous note",
-      callback: () => this.goToPreviousNote(),
+      callback: () => this.goToPreviousNoteCommand(),
     });
 
     this.addCommand({
       id: "go-to-next-note",
       name: "Go to next note",
-      callback: () => this.goToNextNote(),
+      callback: () => this.goToNextNoteCommand(),
     });
 
     this.addCommand({
       id: "go-to-first-note",
       name: "Go to first note",
-      callback: () => this.goToFirstNote(),
+      callback: () => this.goToFirstNoteCommand(),
     });
 
     this.addCommand({
       id: "go-to-last-note",
       name: "Go to last note",
-      callback: () => this.goToLastNote(),
+      callback: () => this.goToLastNoteCommand(),
     });
 
     this.addCommand({
       id: "detach-note",
       name: "Detach note",
-      callback: () => this.detachNote(),
+      callback: () => this.detachNoteCommand(),
     });
 
     this.addCommand({
@@ -41,7 +41,7 @@ export default class PreviousRiverPlugin extends Plugin {
     });
   }
 
-  async goToPreviousNote() {
+  async goToPreviousNoteCommand() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
@@ -55,7 +55,7 @@ export default class PreviousRiverPlugin extends Plugin {
     await this.app.workspace.getLeaf().openFile(target);
   }
 
-  async goToNextNote() {
+  async goToNextNoteCommand() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
@@ -78,7 +78,7 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   }
 
-  async goToFirstNote() {
+  async goToFirstNoteCommand() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
@@ -99,7 +99,7 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   }
 
-  async goToLastNote() {
+  async goToLastNoteCommand() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
@@ -111,7 +111,7 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   }
 
-  async detachNote() {
+  async detachNoteCommand() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
