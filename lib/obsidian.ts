@@ -95,3 +95,9 @@ export async function detachNote(app: App, file: TFile): Promise<void> {
   // 1. If nextNotes() is not open, open it first.
   // 2. Set previousNote() to next notes previous properties.
 }
+
+export async function setPreviousProperty(app: App, file: TFile, previousLink: string): Promise<void> {
+  await app.fileManager.processFrontMatter(file, (fm) => {
+    fm.previous = `[[${previousLink}]]`;
+  });
+}
