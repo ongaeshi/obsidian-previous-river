@@ -96,6 +96,13 @@ export async function detachNote(app: App, file: TFile): Promise<void> {
   // 2. Set previousNote() to next notes previous properties.
 }
 
+/**
+ * Sets the `previous` property in the file's frontmatter to the specified link.
+ *
+ * @param app - The Obsidian App instance.
+ * @param file - The file to modify.
+ * @param previousLink - The link path or name to set as the previous note.
+ */
 export async function setPreviousProperty(app: App, file: TFile, previousLink: string): Promise<void> {
   await app.fileManager.processFrontMatter(file, (fm) => {
     fm.previous = `[[${previousLink}]]`;
