@@ -1,6 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { NextNoteSuggestModal } from "./lib/NextNoteSuggestModal";
-import { getActiveFile, getPreviousNote, getNextNotes, detachNote, setPreviousProperty } from "./lib/obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes, detachNote, setPreviousProperty, findLastNote } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   onload() {
@@ -99,41 +99,13 @@ export default class PreviousRiverPlugin extends Plugin {
     }
   }
 
-  async findLastNote(startNote: TFile): Promise<TFile | null> {
-    let lastNote = startNote;
-    while (true) {
-      const nextNotes = getNextNotes(this.app, lastNote);
-      if (nextNotes.length === 0 || nextNotes.includes(startNote)) {
-        break;
-      }
-
-      if (nextNotes.length === 1) {
-        // If only one next note exists, follow it.
-        lastNote = nextNotes[0];
-      } else {
-        // If multiple candidates exist, open a suggestion modal.
-        const selectedNote = await new Promise<TFile | null>((resolve) => {
-          new NextNoteSuggestModal(this.app, nextNotes, resolve).open();
-        });
-
-        if (!selectedNote) {
-          // If the user cancels selection, stop.
-          return null;
-        }
-
-        lastNote = selectedNote;
-      }
-    }
-    return lastNote;
-  }
-
   async goToLastNote() {
     const file = getActiveFile(this.app);
     if (!file) {
       return;
     }
 
-    const lastNote = await this.findLastNote(file);
+    const lastNote = await findLastNote(this.app, file);
     if (lastNote && lastNote !== file) {
       await this.app.workspace.getLeaf().openFile(lastNote);
     }
@@ -166,7 +138,7 @@ export default class PreviousRiverPlugin extends Plugin {
       return;
     }
 
-    const lastNote = await this.findLastNote(selectedNote);
+    const lastNote = await findLastNote(this.app, selectedNote);
     if (!lastNote) {
       return;
     }

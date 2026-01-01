@@ -1,6 +1,7 @@
 import { App, TFile } from "obsidian";
 import { Notice, getLinkpath } from "obsidian";
 import { extractLinktext } from "./utils";
+import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
 
 /**
  * Get the currently active file.
@@ -107,4 +108,32 @@ export async function setPreviousProperty(app: App, file: TFile, previousLink: s
   await app.fileManager.processFrontMatter(file, (fm) => {
     fm.previous = `[[${previousLink}]]`;
   });
+}
+
+export async function findLastNote(app: App, startNote: TFile): Promise<TFile | null> {
+  let lastNote = startNote;
+  while (true) {
+    const nextNotes = getNextNotes(app, lastNote);
+    if (nextNotes.length === 0 || nextNotes.includes(startNote)) {
+      break;
+    }
+
+    if (nextNotes.length === 1) {
+      // If only one next note exists, follow it.
+      lastNote = nextNotes[0];
+    } else {
+      // If multiple candidates exist, open a suggestion modal.
+      const selectedNote = await new Promise<TFile | null>((resolve) => {
+        new NextNoteSuggestModal(app, nextNotes, resolve).open();
+      });
+
+      if (!selectedNote) {
+        // If the user cancels selection, stop.
+        return null;
+      }
+
+      lastNote = selectedNote;
+    }
+  }
+  return lastNote;
 }
