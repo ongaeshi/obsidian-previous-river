@@ -145,3 +145,15 @@ export async function findLastNote(app: App, startNote: TFile): Promise<TFile | 
   }
   return lastNote;
 }
+
+export async function findFirstNote(app: App, startNote: TFile): Promise<TFile> {
+  let firstNote = startNote;
+  while (true) {
+    const previousNote = getPreviousNote(app, firstNote);
+    if (!previousNote || previousNote === startNote) {
+      break;
+    }
+    firstNote = previousNote;
+  }
+  return firstNote;
+}

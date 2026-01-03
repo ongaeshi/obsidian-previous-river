@@ -6,7 +6,8 @@ import {
   goToLastNoteCommand,
   detachNoteCommand,
   insertNoteToLastCommand,
-  insertNoteCommand
+  insertNoteCommand,
+  insertNoteToFirstCommand
 } from "./lib/commands";
 
 export default class PreviousRiverPlugin extends Plugin {
@@ -51,6 +52,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "insert-note",
       name: "Insert note",
       callback: () => insertNoteCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "insert-note-to-first",
+      name: "Insert note to first",
+      callback: () => insertNoteToFirstCommand(this.app),
     });
   }
 }

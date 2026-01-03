@@ -1,6 +1,6 @@
 import { App, TFile } from "obsidian";
 import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
-import { getActiveFile, getPreviousNote, getNextNotes, detachNote, setPreviousProperty, findLastNote } from "./obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes, detachNote, setPreviousProperty, findLastNote, findFirstNote } from "./obsidian";
 
 export async function goToPreviousNoteCommand(app: App) {
     const file = getActiveFile(app);
@@ -45,16 +45,7 @@ export async function goToFirstNoteCommand(app: App) {
         return;
     }
 
-    const startNote = file;
-    let firstNote = file;
-    while (true) {
-        const previousNote = getPreviousNote(app, firstNote);
-        if (!previousNote || previousNote === startNote) {
-            break;
-        }
-        firstNote = previousNote;
-    }
-
+    const firstNote = await findFirstNote(app, file);
     if (firstNote !== file) {
         await app.workspace.getLeaf().openFile(firstNote);
     }
@@ -136,4 +127,34 @@ export async function insertNoteCommand(app: App) {
     for (const successor of successors) {
         await setPreviousProperty(app, successor, file.basename);
     }
+}
+
+export async function insertNoteToFirstCommand(app: App) {
+    const file = getActiveFile(app);
+    if (!file) {
+        return;
+    }
+
+    // 1. Detach current note
+    await detachNote(app, file);
+
+    // 2. Select target note
+    const selectedNote = await new Promise<TFile | null>((resolve) => {
+        new NextNoteSuggestModal(app, app.vault.getMarkdownFiles(), resolve).open();
+    });
+
+    if (!selectedNote) {
+        return;
+    }
+
+    // 3. Find first note of the chain
+    const firstNote = await findFirstNote(app, selectedNote);
+
+    // 4. Update first note to point to current note
+    await setPreviousProperty(app, firstNote, file.basename);
+
+    // 5. Update current note to point to ROOT
+    await app.fileManager.processFrontMatter(file, (fm) => {
+        fm.previous = "ROOT";
+    });
 }
