@@ -106,3 +106,34 @@ export async function insertNoteToLastCommand(app: App) {
 
     await setPreviousProperty(app, file, lastNote.basename);
 }
+
+export async function insertNoteCommand(app: App) {
+    const file = getActiveFile(app);
+    if (!file) {
+        return;
+    }
+
+    // 1. Detach current note
+    await detachNote(app, file);
+
+    // 2. Select target note
+    const selectedNote = await new Promise<TFile | null>((resolve) => {
+        // Show all markdown files
+        new NextNoteSuggestModal(app, app.vault.getMarkdownFiles(), resolve).open();
+    });
+
+    if (!selectedNote) {
+        return;
+    }
+
+    // 3. Find successors of the target note (notes that currently point to target)
+    const successors = getNextNotes(app, selectedNote);
+
+    // 4. Link current note to target
+    await setPreviousProperty(app, file, selectedNote.basename);
+
+    // 5. Update successors to point to current note
+    for (const successor of successors) {
+        await setPreviousProperty(app, successor, file.basename);
+    }
+}
