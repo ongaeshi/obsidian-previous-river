@@ -81,20 +81,28 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
 }
 
 export async function detachNote(app: App, file: TFile): Promise<void> {
-  try {
-    await app.fileManager.processFrontMatter(file, (fm) => {
-      fm.previous = "ROOT";
-    });
+  const previousLinkpath = getPreviousLinkpath(app, file);
+  const nextNotes = getNextNotes(app, file);
 
-    new Notice(`Detached: previous → ROOT`);
-  } catch (err) {
-    console.error(err);
-    new Notice(`Failed to detach note`);
+  // Update next notes
+  for (const nextNote of nextNotes) {
+    await app.fileManager.processFrontMatter(nextNote, (fm) => {
+      if (previousLinkpath) {
+        // Point to the previous note
+        fm.previous = `[[${previousLinkpath}]]`;
+      } else {
+        // No previous note, so nextNote becomes a root
+        delete fm.previous;
+      }
+    });
   }
 
-  // TODO:
-  // 1. If nextNotes() is not open, open it first.
-  // 2. Set previousNote() to next notes previous properties.
+  // Update current note (remove previous)
+  await app.fileManager.processFrontMatter(file, (fm) => {
+    delete fm.previous;
+  });
+
+  new Notice(`Detached note: ${file.basename}`);
 }
 
 /**
