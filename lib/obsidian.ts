@@ -92,7 +92,7 @@ export async function detachNote(app: App, file: TFile): Promise<void> {
         fm.previous = `[[${previousLinkpath}]]`;
       } else {
         // No previous note, so nextNote becomes a root
-        delete fm.previous;
+        fm.previous = "ROOT";
       }
     });
   }
