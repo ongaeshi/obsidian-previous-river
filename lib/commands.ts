@@ -70,7 +70,7 @@ export async function detachNoteCommand(app: App) {
     }
 
     // TODO: Add confirm dialog
-    await detachNote(app, file);
+    await detachNote(app, file, { showNotification: true });
 }
 
 export async function insertNoteToLastCommand(app: App) {

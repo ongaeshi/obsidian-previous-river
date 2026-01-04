@@ -80,7 +80,8 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
   return nextNotes;
 }
 
-export async function detachNote(app: App, file: TFile): Promise<void> {
+export async function detachNote(app: App, file: TFile, options?: { showNotification?: boolean }): Promise<void> {
+  const showNotification = options?.showNotification ?? false;
   const previousLinkpath = getPreviousLinkpath(app, file);
   const nextNotes = getNextNotes(app, file);
 
@@ -102,7 +103,9 @@ export async function detachNote(app: App, file: TFile): Promise<void> {
     delete fm.previous;
   });
 
-  new Notice(`Detached note: ${file.basename}`);
+  if (showNotification) {
+    new Notice(`Detached note: ${file.basename}`);
+  }
 }
 
 /**
