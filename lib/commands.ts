@@ -79,9 +79,6 @@ export async function insertNoteToLastCommand(app: App) {
         return;
     }
 
-    // detach note
-    await detachNote(app, file);
-
     const selectedNote = await new Promise<TFile | null>((resolve) => {
         new NextNoteSuggestModal(app, app.vault.getMarkdownFiles(), resolve).open();
     });
@@ -89,6 +86,8 @@ export async function insertNoteToLastCommand(app: App) {
     if (!selectedNote) {
         return;
     }
+
+    await detachNote(app, file);
 
     const lastNote = await findLastNote(app, selectedNote);
     if (!lastNote) {
@@ -104,10 +103,7 @@ export async function insertNoteCommand(app: App) {
         return;
     }
 
-    // 1. Detach current note
-    await detachNote(app, file);
-
-    // 2. Select target note
+    // 1. Select target note
     const selectedNote = await new Promise<TFile | null>((resolve) => {
         // Show all markdown files
         new NextNoteSuggestModal(app, app.vault.getMarkdownFiles(), resolve).open();
@@ -116,6 +112,9 @@ export async function insertNoteCommand(app: App) {
     if (!selectedNote) {
         return;
     }
+
+    // 2. Detach current note
+    await detachNote(app, file);
 
     // 3. Find successors of the target note (notes that currently point to target)
     const successors = getNextNotes(app, selectedNote);
@@ -135,10 +134,7 @@ export async function insertNoteToFirstCommand(app: App) {
         return;
     }
 
-    // 1. Detach current note
-    await detachNote(app, file);
-
-    // 2. Select target note
+    // 1. Select target note
     const selectedNote = await new Promise<TFile | null>((resolve) => {
         new NextNoteSuggestModal(app, app.vault.getMarkdownFiles(), resolve).open();
     });
@@ -146,6 +142,9 @@ export async function insertNoteToFirstCommand(app: App) {
     if (!selectedNote) {
         return;
     }
+
+    // 2. Detach current note
+    await detachNote(app, file);
 
     // 3. Find first note of the chain
     const firstNote = await findFirstNote(app, selectedNote);
