@@ -12,8 +12,8 @@ Zettelkastenや連想に基づくノート管理において、ノート間の�
 
 ```mermaid
 graph LR
-    A[Root Node<br>previous: null] -->|Next| B(Current Node<br>previous: [[A]])
-    B -->|Next| C(Next Node<br>previous: [[B]])
+    A["Root Node<br>previous: null"] -->|Next| B("Current Node<br>previous: [[A]]")
+    B -->|Next| C("Next Node<br>previous: [[B]]")
     C -->|Previous| B
     B -->|Previous| A
 ```
