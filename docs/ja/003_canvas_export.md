@@ -118,4 +118,4 @@ class CanvasGenerator {
 - [`511e448`](https://github.com/ongaeshi/previous-river/commit/511e448) feat: Add export-filtered-rivers-to-canvas command
 
 ---
-[<<](002_find_last_note_optimization.md)
+[⬅️ previous 002_find_last_note_optimization](002_find_last_note_optimization.md)

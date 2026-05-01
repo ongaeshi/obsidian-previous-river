@@ -66,4 +66,4 @@ export function buildReverseCache(app: App): Record<string, string[]> {
 - [`c6dd657`](https://github.com/ongaeshi/previous-river/commit/c6dd657) refactor: Extranct getNextNotes() function
 
 ---
-[<<](001_chain_algorithm.md) | [>>](003_canvas_export.md)
+[⬅️ previous 001_chain_algorithm](001_chain_algorithm.md) | [➡️ next 003_canvas_export](003_canvas_export.md)
