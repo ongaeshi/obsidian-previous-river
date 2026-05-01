@@ -1,4 +1,4 @@
-# previous-riverの基本機能とプロパティ操作
+# Previous River の基本機能とプロパティ操作
 
 ## 1. 背景と目的 (Background)
 
