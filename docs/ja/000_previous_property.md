@@ -97,3 +97,6 @@ export async function detachNote(app: App, file: TFile, options?: { showNotifica
 - [c6dd657](https://github.com/ongaeshi/previous-river/commit/c6dd657) refactor: Extranct getNextNotes() function
 - [c04ab83](https://github.com/ongaeshi/previous-river/commit/c04ab83) refactor: Rename to getPreviousLinkText
 - [1911620](https://github.com/ongaeshi/previous-river/commit/1911620) refactor: Move functions to obsidian.ts
+
+---
+[>>](001_chain_algorithm.md)

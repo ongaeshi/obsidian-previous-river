@@ -116,3 +116,6 @@ class CanvasGenerator {
 - [`9432f29`](https://github.com/ongaeshi/previous-river/commit/9432f29) refactor: Add confirmation dialog and extract canvas generation logic
 - [`7716d36`](https://github.com/ongaeshi/previous-river/commit/7716d36) style: Increase Canvas node height and adjust vertical margins
 - [`511e448`](https://github.com/ongaeshi/previous-river/commit/511e448) feat: Add export-filtered-rivers-to-canvas command
+
+---
+[<<](002_find_last_note_optimization.md)

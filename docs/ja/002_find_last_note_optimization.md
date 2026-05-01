@@ -64,3 +64,6 @@ export function buildReverseCache(app: App): Record<string, string[]> {
 - [`21adb7d`](https://github.com/ongaeshi/previous-river/commit/21adb7d) feat: Add timeout to findLastNote search
 - [`6e8e72b`](https://github.com/ongaeshi/previous-river/commit/6e8e72b) refactor: findLastNote utility function into a `lib/obsidian.ts` module.
 - [`c6dd657`](https://github.com/ongaeshi/previous-river/commit/c6dd657) refactor: Extranct getNextNotes() function
+
+---
+[<<](001_chain_algorithm.md) | [>>](003_canvas_export.md)

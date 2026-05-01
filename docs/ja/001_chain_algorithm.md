@@ -95,3 +95,6 @@ if (isOnSamePath(app, file, selectedNote)) {
 - [`be9fcf6` - feat: Do not detach before inserting](https://github.com/ongaeshi/previous-river/commit/be9fcf6f0eecf0920654c89f71aaf368d6d956a7)
 - [`b6ca1db` - feat: Support group insertion in insertNoteToLastCommand and prevent cycles](https://github.com/ongaeshi/previous-river/commit/b6ca1dbf49eaa98b3c0ea441edaee3972fec3904)
 - [`e63ea67` - feat: Support group insertion in insertNoteToFirstCommand](https://github.com/ongaeshi/previous-river/commit/e63ea67804254f162a12707e97d07595546c0a35)
+
+---
+[<<](000_previous_property.md) | [>>](002_find_last_note_optimization.md)
