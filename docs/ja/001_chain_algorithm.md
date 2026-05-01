@@ -97,4 +97,4 @@ if (isOnSamePath(app, file, selectedNote)) {
 - [`e63ea67` - feat: Support group insertion in insertNoteToFirstCommand](https://github.com/ongaeshi/previous-river/commit/e63ea67804254f162a12707e97d07595546c0a35)
 
 ---
-[⬅️ previous 000_previous_property](000_previous_property.md) | [➡️ next 002_find_last_note_optimization](002_find_last_note_optimization.md)
+[⬅️ (previous) 000_previous_property](000_previous_property.md) | [002_find_last_note_optimization  (next) ➡️](002_find_last_note_optimization.md)

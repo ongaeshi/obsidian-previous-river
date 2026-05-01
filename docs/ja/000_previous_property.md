@@ -99,4 +99,4 @@ export async function detachNote(app: App, file: TFile, options?: { showNotifica
 - [1911620](https://github.com/ongaeshi/previous-river/commit/1911620) refactor: Move functions to obsidian.ts
 
 ---
-[➡️ next 001_chain_algorithm](001_chain_algorithm.md)
+[001_chain_algorithm  (next) ➡️](001_chain_algorithm.md)
