@@ -1,10 +1,10 @@
 # Previous River の基本機能とプロパティ操作
 
-## 1. 背景と目的 (Background)
+## 目的
 
 Zettelkastenや連想に基づくノート管理において、ノート間の前後関係（思考のチェイン）を機械的に追跡・操作する。Obsidianのメタデータ（フロントマター）を活用し、双方向リンクのネットワークから特定の一連の流れを抽出・維持する。
 
-## 2. 概念定義 (Definitions)
+## 用語の定義
 
 - **Previous Node**: カレントノートのフロントマター `previous` プロパティが指し示す親ノート。
 - **Next Node**: カレントノートを `previous` プロパティで参照している子ノート。
@@ -18,7 +18,7 @@ graph LR
     B -->|Previous| A
 ```
 
-## 3. 設計意図/ADR (Design Decisions)
+## 設計方針
 
 ノート間の順序関係を管理するためのデータ構造とアクセス方式について定義した。
 
@@ -29,7 +29,7 @@ graph LR
 | プロパティの書き込み方式 | `app.fileManager.processFrontMatter` | `app.vault.modify` による文字列置換 | 文字列置換はYAMLのフォーマット崩れや競合のリスクがある。公式APIで安全に更新するため。 |
 | 次のノート(Next)の検索 | `app.metadataCache.resolvedLinks` の逆引き | 全ファイルのフロントマター走査 | 走査コストを削減するため。バックリンク辞書を `for...in` で走査し、メモリアロケーションを最小限に抑えた（`Object.entries` を回避）。 |
 
-## 4. 実装 (Implementation)
+## 実装
 
 ### プロパティの取得 (Get)
 
@@ -82,13 +82,13 @@ export async function detachNote(app: App, file: TFile, options?: { showNotifica
 }
 ```
 
-## 5. ユースケース (Usage)
+## ユースケース
 
 - **思考の遡り**: `findFirstNote` を用い、現在開いているノートから `previous` を再帰的に辿ることで、アイデアの起点を特定する。
 - **思考の先読み**: `findLastNote` を用い、現在のノートから派生した最終結論ノートを特定する。複数の分岐（Next Note）がある場合はサジェストUIを開き、ユーザーに経路を選択させる。
 - **チェインの切り離し**: `detachNote` を用い、特定のノートを独立した新しい思考の起点に変換する。切り離されたノードの下位要素のリンクは自動的に修復される。
 
-## 6. コミットログ
+## コミットログ
 
 関連する主要なコミット履歴を提示する。
 
