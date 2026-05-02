@@ -205,11 +205,11 @@ Zettelkastenメソッドなどにおいて、作成した永続メモ（Permanen
 
 関連する主要なコミット履歴を提示する。
 
-- [4f199fd](https://github.com/ongaeshi/previous-river/commit/4f199fd) feat: Change current note's previous property value to ROOT
-- [9755a18](https://github.com/ongaeshi/previous-river/commit/9755a18) refactor: Extract getPreviousNote()
-- [c6dd657](https://github.com/ongaeshi/previous-river/commit/c6dd657) refactor: Extract getNextNotes() function
-- [c04ab83](https://github.com/ongaeshi/previous-river/commit/c04ab83) refactor: Rename to getPreviousLinkText
-- [1911620](https://github.com/ongaeshi/previous-river/commit/1911620) refactor: Move functions to obsidian.ts
+- [4f199fd](https://github.com/ongaeshi/previous-river/commit/4f199fd) feat: カレントノートのpreviousプロパティ値をROOTに変更
+- [9755a18](https://github.com/ongaeshi/previous-river/commit/9755a18) refactor: getPreviousNote() を抽出
+- [c6dd657](https://github.com/ongaeshi/previous-river/commit/c6dd657) refactor: getNextNotes() 関数を抽出
+- [c04ab83](https://github.com/ongaeshi/previous-river/commit/c04ab83) refactor: getPreviousLinkText にリネーム
+- [1911620](https://github.com/ongaeshi/previous-river/commit/1911620) refactor: 関数群を obsidian.ts に移動
 
 ---
 [001_chain_algorithm  (next) ➡️](001_chain_algorithm.md)
