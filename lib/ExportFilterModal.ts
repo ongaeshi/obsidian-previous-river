@@ -22,9 +22,9 @@ export class ExportFilterModal extends Modal {
     height: string;
     maxColumns: string;
     exportAll: boolean;
-    onSubmit: (result: ExportFilterResult) => void;
+    onSubmit: (result: ExportFilterResult) => void | Promise<void>;
 
-    constructor(app: App, onSubmit: (result: ExportFilterResult) => void) {
+    constructor(app: App, onSubmit: (result: ExportFilterResult) => void | Promise<void>) {
         super(app);
         this.onSubmit = onSubmit;
         if (lastExportFilterResult) {
@@ -50,25 +50,25 @@ export class ExportFilterModal extends Modal {
 
     onOpen() {
         const { contentEl } = this;
-        contentEl.createEl("h2", { text: "Export Connected Notes by Filter" });
+        contentEl.createEl("h2", { text: "Export connected notes by filter" });
 
         const dirSetting = new Setting(contentEl)
             .setName("Directory")
-            .setDesc("Export notes under this directory (e.g., 01_Projects)")
+            .setDesc("Export notes under this directory (e.g., 01_projects)")
             .addText(text => text
                 .setValue(this.directory)
                 .onChange(value => this.directory = value));
 
         const propSetting = new Setting(contentEl)
             .setName("Property")
-            .setDesc("Use with Link or Tag: Only search in this property")
+            .setDesc("Use with link or tag: only search in this property")
             .addText(text => text
                 .setValue(this.property)
                 .onChange(value => this.property = value));
 
         const linkSetting = new Setting(contentEl)
             .setName("Link")
-            .setDesc("Export notes containing this link (e.g., Some Concept)")
+            .setDesc("Export notes containing this link (e.g., some concept)")
             .addText(text => text
                 .setValue(this.link)
                 .onChange(value => this.link = value));
@@ -116,7 +116,7 @@ export class ExportFilterModal extends Modal {
                 .onChange(value => this.height = value));
 
         new Setting(contentEl)
-            .setName("Max Columns")
+            .setName("Max columns")
             .setDesc("Default: 5")
             .addText(text => text
                 .setValue(this.maxColumns)

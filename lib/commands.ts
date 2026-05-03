@@ -356,7 +356,7 @@ export function exportFilteredRiversToCanvasCommand(app: App) {
     new ExportFilterModal(app, async (result) => {
         let { directory, tag, link, property, width, height, maxColumns, exportAll } = result;
         if (!exportAll && !directory && !tag && !link) {
-            new Notice("Please provide at least one filter criterion or check 'Search all elements'.");
+            new Notice("Please provide at least one filter criterion or check 'search all elements'.");
             return;
         }
 
