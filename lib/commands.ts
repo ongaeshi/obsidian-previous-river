@@ -492,3 +492,16 @@ export function exportFilteredRiversToCanvasCommand(app: App) {
 
     }).open();
 }
+
+export async function setRootCommand(app: App) {
+    const file = getActiveFile(app);
+    if (!file) {
+        return;
+    }
+
+    await app.fileManager.processFrontMatter(file, (fm) => {
+        fm.previous = "ROOT";
+    });
+
+    new Notice(`Set ROOT to previous property of ${file.basename}`);
+}

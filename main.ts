@@ -11,7 +11,8 @@ import {
   copyNextNotesListCommand,
   exportNextNotesToCanvasCommand,
   exportAllRiversToCanvasCommand,
-  exportFilteredRiversToCanvasCommand
+  exportFilteredRiversToCanvasCommand,
+  setRootCommand
 } from "./lib/commands";
 
 export default class PreviousRiverPlugin extends Plugin {
@@ -86,6 +87,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "export-filtered-rivers-to-canvas",
       name: "Export filtered rivers to canvas",
       callback: () => exportFilteredRiversToCanvasCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "set-root",
+      name: "Set ROOT to previous property",
+      callback: () => setRootCommand(this.app),
     });
   }
 }
