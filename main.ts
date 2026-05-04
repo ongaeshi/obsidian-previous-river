@@ -12,7 +12,8 @@ import {
   exportNextNotesToCanvasCommand,
   exportAllRiversToCanvasCommand,
   exportFilteredRiversToCanvasCommand,
-  setRootCommand
+  setRootCommand,
+  duplicateNextNoteCommand
 } from "./lib/commands";
 
 export default class PreviousRiverPlugin extends Plugin {
@@ -93,6 +94,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "set-root",
       name: "Set ROOT to previous property",
       callback: () => setRootCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "duplicate-next-note",
+      name: "Duplicate next note",
+      callback: () => duplicateNextNoteCommand(this.app),
     });
   }
 }
