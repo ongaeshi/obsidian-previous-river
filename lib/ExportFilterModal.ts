@@ -139,7 +139,7 @@ export class ExportFilterModal extends Modal {
                         exportAll: this.exportAll
                     };
                     lastExportFilterResult = result;
-                    this.onSubmit(result);
+                    void this.onSubmit(result);
                 }));
     }
 
