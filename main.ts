@@ -129,7 +129,7 @@ export default class PreviousRiverPlugin extends Plugin {
                 if (property.querySelector('.previous-river-go-next-button')) return;
 
                 const button = property.createEl('button', {
-                  text: 'Go next notes',
+                  text: 'next',
                   cls: 'previous-river-go-next-button',
                 });
 
