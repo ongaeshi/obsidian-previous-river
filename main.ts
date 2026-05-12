@@ -101,5 +101,63 @@ export default class PreviousRiverPlugin extends Plugin {
       name: "Duplicate next note",
       callback: () => duplicateNextNoteCommand(this.app),
     });
+
+    this.app.workspace.onLayoutReady(() => {
+      let timeoutId: number | null = null;
+      
+      const observer = new MutationObserver(() => {
+        if (timeoutId !== null) {
+          window.clearTimeout(timeoutId);
+        }
+        
+        timeoutId = window.setTimeout(() => {
+          const propertiesContainers = document.querySelectorAll('.metadata-properties');
+          propertiesContainers.forEach((container) => {
+            const properties = container.querySelectorAll('.metadata-property');
+            properties.forEach((property) => {
+              const keyInput = property.querySelector('.metadata-property-key-input') as HTMLInputElement | null;
+              const keyTextEl = property.querySelector('.metadata-property-key');
+              
+              let keyText = "";
+              if (keyInput && keyInput.value) {
+                keyText = keyInput.value;
+              } else if (keyTextEl && keyTextEl.textContent) {
+                keyText = keyTextEl.textContent;
+              }
+
+              if (keyText.toLowerCase() === 'previous') {
+                if (property.querySelector('.previous-river-go-next-button')) return;
+
+                const button = property.createEl('button', {
+                  text: 'Go next notes',
+                  cls: 'previous-river-go-next-button',
+                });
+
+                // Style the button slightly so it looks good inline
+                button.style.marginLeft = '8px';
+                button.style.height = 'var(--input-height)';
+                button.style.padding = '0 12px';
+
+                button.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  goToNextNoteCommand(this.app);
+                });
+
+                const valueContainer = property.querySelector('.metadata-property-value');
+                if (valueContainer) {
+                  valueContainer.appendChild(button);
+                } else {
+                  property.appendChild(button);
+                }
+              }
+            });
+          });
+        }, 100); // debounce slightly to avoid performance hit
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+      this.register(() => observer.disconnect());
+    });
   }
 }
