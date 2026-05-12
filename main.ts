@@ -15,6 +15,7 @@ import {
   setRootCommand,
   duplicateNextNoteCommand
 } from "./lib/commands";
+import { getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   onload() {
@@ -111,6 +112,9 @@ export default class PreviousRiverPlugin extends Plugin {
         }
         
         timeoutId = window.setTimeout(() => {
+          const activeFile = this.app.workspace.getActiveFile();
+          const hasNextNotes = activeFile ? getNextNotes(this.app, activeFile).length > 0 : false;
+
           const propertiesContainers = document.querySelectorAll('.metadata-properties');
           propertiesContainers.forEach((container) => {
             const properties = container.querySelectorAll('.metadata-property');
@@ -126,7 +130,16 @@ export default class PreviousRiverPlugin extends Plugin {
               }
 
               if (keyText.toLowerCase() === 'previous') {
-                if (property.querySelector('.previous-river-go-next-button')) return;
+                const existingButton = property.querySelector('.previous-river-go-next-button');
+
+                if (!hasNextNotes) {
+                  if (existingButton) {
+                    existingButton.remove();
+                  }
+                  return;
+                }
+
+                if (existingButton) return;
 
                 const button = property.createEl('button', {
                   text: 'next',
