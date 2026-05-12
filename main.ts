@@ -133,10 +133,16 @@ export default class PreviousRiverPlugin extends Plugin {
                   cls: 'previous-river-go-next-button',
                 });
 
-                // Style the button slightly so it looks good inline
-                button.style.marginLeft = '8px';
-                button.style.height = 'var(--input-height)';
+                // Set absolute positioning to place it on the right side without affecting height
+                (property as HTMLElement).style.position = 'relative';
+                
+                button.style.position = 'absolute';
+                button.style.right = '4px';
+                button.style.top = '50%';
+                button.style.transform = 'translateY(-50%)';
+                button.style.height = '24px';
                 button.style.padding = '0 12px';
+                button.style.zIndex = '10';
 
                 button.addEventListener('click', (e) => {
                   e.preventDefault();
@@ -144,12 +150,8 @@ export default class PreviousRiverPlugin extends Plugin {
                   goToNextNoteCommand(this.app);
                 });
 
-                const valueContainer = property.querySelector('.metadata-property-value');
-                if (valueContainer) {
-                  valueContainer.appendChild(button);
-                } else {
-                  property.appendChild(button);
-                }
+                // Simply append to the property container
+                property.appendChild(button);
               }
             });
           });
