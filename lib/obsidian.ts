@@ -221,12 +221,7 @@ export function isAncestor(app: App, note: TFile, target: TFile): boolean {
   const visited = new Set<string>();
   visited.add(current.path);
 
-  // Limit iteration to prevent infinite loops in case of cycles (though visited set handles it)
-  // A reasonable limit for depth
-  let depth = 0;
-  const maxDepth = 100000; // TODO: Is this limit necessary?
-
-  while (depth < maxDepth) {
+  while (true) {
     const prev = getPreviousNote(app, current);
     if (!prev) {
       return false;
@@ -242,10 +237,7 @@ export function isAncestor(app: App, note: TFile, target: TFile): boolean {
 
     visited.add(prev.path);
     current = prev;
-    depth++;
   }
-
-  return false;
 }
 
 /**

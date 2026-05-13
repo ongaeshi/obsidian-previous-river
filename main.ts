@@ -11,8 +11,11 @@ import {
   copyNextNotesListCommand,
   exportNextNotesToCanvasCommand,
   exportAllRiversToCanvasCommand,
-  exportFilteredRiversToCanvasCommand
+  exportFilteredRiversToCanvasCommand,
+  setRootCommand,
+  duplicateNextNoteCommand
 } from "./lib/commands";
+import { getNextNotes } from "./lib/obsidian";
 
 export default class PreviousRiverPlugin extends Plugin {
   onload() {
@@ -86,6 +89,90 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "export-filtered-rivers-to-canvas",
       name: "Export filtered rivers to canvas",
       callback: () => exportFilteredRiversToCanvasCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "set-root",
+      name: "Set ROOT to previous property",
+      callback: () => setRootCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "duplicate-next-note",
+      name: "Duplicate next note",
+      callback: () => duplicateNextNoteCommand(this.app),
+    });
+
+    this.app.workspace.onLayoutReady(() => {
+      let timeoutId: number | null = null;
+      
+      const observer = new MutationObserver(() => {
+        if (timeoutId !== null) {
+          window.clearTimeout(timeoutId);
+        }
+        
+        timeoutId = window.setTimeout(() => {
+          const activeFile = this.app.workspace.getActiveFile();
+          const hasNextNotes = activeFile ? getNextNotes(this.app, activeFile).length > 0 : false;
+
+          const propertiesContainers = document.querySelectorAll('.metadata-properties');
+          propertiesContainers.forEach((container) => {
+            const properties = container.querySelectorAll('.metadata-property');
+            properties.forEach((property) => {
+              const keyInput = property.querySelector('.metadata-property-key-input') as HTMLInputElement | null;
+              const keyTextEl = property.querySelector('.metadata-property-key');
+              
+              let keyText = "";
+              if (keyInput && keyInput.value) {
+                keyText = keyInput.value;
+              } else if (keyTextEl && keyTextEl.textContent) {
+                keyText = keyTextEl.textContent;
+              }
+
+              if (keyText.toLowerCase() === 'previous') {
+                const existingButton = property.querySelector('.previous-river-go-next-button');
+
+                if (!hasNextNotes) {
+                  if (existingButton) {
+                    existingButton.remove();
+                  }
+                  return;
+                }
+
+                if (existingButton) return;
+
+                const button = property.createEl('button', {
+                  text: 'next',
+                  cls: 'previous-river-go-next-button',
+                });
+
+                // Set absolute positioning to place it on the right side without affecting height
+                (property as HTMLElement).style.position = 'relative';
+                
+                button.style.position = 'absolute';
+                button.style.right = '4px';
+                button.style.top = '50%';
+                button.style.transform = 'translateY(-50%)';
+                button.style.height = '24px';
+                button.style.padding = '0 12px';
+                button.style.zIndex = '10';
+
+                button.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  goToNextNoteCommand(this.app);
+                });
+
+                // Simply append to the property container
+                property.appendChild(button);
+              }
+            });
+          });
+        }, 100); // debounce slightly to avoid performance hit
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+      this.register(() => observer.disconnect());
     });
   }
 }
