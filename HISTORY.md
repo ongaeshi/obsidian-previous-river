@@ -1,5 +1,12 @@
 # History
 
+## 1.1.0 (2026-05-14)
+- **Next button**: Add a "Next" button to the right side of the `previous` property row within Obsidian's native Properties view.
+- **Duplicate next note**: Add a command to duplicate the currently active note and automatically set the new note's `previous` property to point back to the original note.
+- **Set ROOT**: Add a command to quickly set the `previous` property of the active file to `ROOT`.
+- **Fix floating promise lint error**: Fix a TypeScript linting error in `ExportFilterModal` by explicitly handling an unhandled promise invocation.
+- **Translate technical docs**: Translate the Japanese technical documentation (`docs/ja/`) into English.
+
 ## 1.0.0 (2026-04-30)
 - **Stable Release**: Official 1.0.0 release. 
 - **Documentation & Safety**: Finalized and documented the `isAncestor` / `isOnSamePath` safety algorithms that prevent cycle references and protect note graph integrity.
