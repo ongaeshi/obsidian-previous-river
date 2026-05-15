@@ -1,0 +1,13 @@
+.previous-river-property-relative {
+  position: relative;
+}
+
+.previous-river-go-next-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  padding: 0 12px;
+  z-index: 10;
+}
