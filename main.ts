@@ -146,16 +146,9 @@ export default class PreviousRiverPlugin extends Plugin {
                   cls: 'previous-river-go-next-button',
                 });
 
-                // Set absolute positioning to place it on the right side without affecting height
-                (property as HTMLElement).style.position = 'relative';
-                
-                button.style.position = 'absolute';
-                button.style.right = '4px';
-                button.style.top = '50%';
-                button.style.transform = 'translateY(-50%)';
-                button.style.height = '24px';
-                button.style.padding = '0 12px';
-                button.style.zIndex = '10';
+                // Set class to place it on the right side without affecting height
+                property.classList.add('previous-river-property-relative');
+
 
                 button.addEventListener('click', (e) => {
                   e.preventDefault();

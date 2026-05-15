@@ -1,5 +1,10 @@
 # History
 
+## 1.1.1 (2026-05-16)
+- **Fix ESLint errors**: Replaced inline styles with CSS classes to improve code maintainability and resolve linting warnings.
+- **Update minimum app version**: Bumped `minAppVersion` to `1.8.7` to ensure compatibility with recent Obsidian API changes.
+- **Release workflow automation**: Added a GitHub Actions workflow to automate the release process and securely sign release assets using Artifact Attestations.
+
 ## 1.1.0 (2026-05-14)
 - **Next button**: Add a "Next" button to the right side of the `previous` property row within Obsidian's native Properties view.
 - **Duplicate next note**: Add a command to duplicate the currently active note and automatically set the new note's `previous` property to point back to the original note.
