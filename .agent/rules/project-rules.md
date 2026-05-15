@@ -22,3 +22,7 @@ Key principles include:
 - Be clear, concise, and direct.
 - Use active voice.
 - Avoid unnecessary jargon or overly complex phrasing.
+
+# Command Execution Rules
+
+- When executing npm commands in the terminal as an agent, ALWAYS use `npm.cmd` instead of `npm` (e.g., `npm.cmd install`, `npm.cmd run build`) to ensure reliable execution in the Windows environment.
