@@ -1,7 +1,7 @@
 {
 	"id": "previous-river",
 	"name": "Previous River",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"minAppVersion": "1.8.7",
 	"description": "Move between notes using 'previous' property and backlinks.",
 	"author": "ongaeshi",
