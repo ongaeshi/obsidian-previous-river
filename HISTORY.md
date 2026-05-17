@@ -1,5 +1,9 @@
 # History
 
+## 1.2 (2026-05-17)
+- **Documentation**: Rewrote `README.ja.md` to be more clear and concise, and added demo GIFs to showcase plugin features.
+- **English README**: Translated `README.ja.md` to English and updated `README.md`.
+
 ## 1.1.1 (2026-05-16)
 - **Fix ESLint errors**: Replaced inline styles with CSS classes to improve code maintainability and resolve linting warnings.
 - **Update minimum app version**: Bumped `minAppVersion` to `1.8.7` to ensure compatibility with recent Obsidian API changes.
