@@ -11,8 +11,7 @@ Previous River は Obsidian のノート同士に「前後関係」を持たせ�
 
 Obsidian の「設定」をクリックし、「コミュニティプラグイン」の「閲覧」から `previous river` で検索してください。
 
-https://community.obsidian.md/plugins/previous-river
-
+もしくは https://community.obsidian.md/plugins/previous-river からインストールしてください。
 
 ## 特徴
 
