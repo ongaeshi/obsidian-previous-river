@@ -4,7 +4,7 @@ Previous River は Obsidian のノート同士に「前後関係」を持たせ�
 
 フロントマターの `previous` プロパティに **前のノートへのリンク** を設定することで、ノートを連続したシーケンスとして繋ぎ合わせることができます。これにより、流れに沿ったスムーズなナビゲーションや、ネットワーク全体像の可視化が可能になります。
 
-![Previous River Demo](https://github.com/user-attachments/assets/db3d5466-affd-43de-aebe-b5d4757e08ac)
+![Previous River Demo](https://github.com/user-attachments/assets/aebe81a9-5674-4cc8-8e65-660584197812)
 
 
 ## インストール
@@ -24,7 +24,7 @@ Obsidian のプロパティビューから簡単に前後のノートに移動�
 
 前のノートに戻るときは `previous` プロパティに設定されたリンクをクリックします。
 
-<!-- 動画1 -->
+![integration-with-property-view](https://github.com/user-attachments/assets/59da2149-82eb-4fee-b993-5d75528595b0)
 
 ### 2. Canvas へのネットワーク書き出し
 繋がっているノート群をビジュアルなツリー構造として **Obsidian Canvas に書き出す** ことができます。
@@ -34,9 +34,7 @@ Obsidian のプロパティビューから簡単に前後のノートに移動�
 
 これらを Canvas 上で簡単に俯瞰できます。また、ループ構造を自動的に検出し、起点のノートに `🔄` アイコンを付与するため、ネットワークの整合性確認にも役立ちます。
 
-<!-- 動画2 -->
-
----
+![](https://github.com/user-attachments/assets/c74cf77e-9fb7-459f-8c0a-590881e54128)
 
 ## コマンド一覧
 
