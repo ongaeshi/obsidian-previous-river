@@ -409,7 +409,7 @@ export function exportAllRiversToCanvasCommand(app: App) {
 
 export function exportFilteredRiversToCanvasCommand(app: App) {
     new ExportFilterModal(app, async (result) => {
-        let { directory, tag, link, property, width, height, maxColumns, exportAll } = result;
+        let { filename, directory, tag, link, property, width, height, maxColumns, exportAll } = result;
         if (!exportAll && !directory && !tag && !link) {
             new Notice("Please provide at least one filter criterion or check 'search all elements'.");
             return;
@@ -541,8 +541,28 @@ export function exportFilteredRiversToCanvasCommand(app: App) {
 
         const activeFile = getActiveFile(app);
         const sourcePath = activeFile ? activeFile.path : "";
-        const canvasName = "Filtered Connected Notes.canvas";
-        const saveDir = app.fileManager.getNewFileParent(sourcePath, "Filtered Connected Notes.md").path;
+        
+        let canvasName = filename.trim();
+        if (!canvasName) {
+            if (exportAll) {
+                canvasName = "All Filtered Connected Notes";
+            } else if (tag) {
+                canvasName = `Filtered Rivers - ${tag.replace(/^#/, '')}`;
+            } else if (directory) {
+                const dirParts = directory.split('/').filter(p => p);
+                const dirName = dirParts.length > 0 ? dirParts.pop() : directory;
+                canvasName = `Filtered Rivers - ${dirName}`;
+            } else if (link) {
+                canvasName = `Filtered Rivers - ${link}`;
+            } else {
+                canvasName = "Filtered Connected Notes";
+            }
+        }
+        if (!canvasName.endsWith(".canvas")) {
+            canvasName += ".canvas";
+        }
+
+        const saveDir = app.fileManager.getNewFileParent(sourcePath, canvasName.replace(".canvas", ".md")).path;
 
         await saveCanvasData(app, generator.nodes, generator.edges, canvasName, saveDir);
 
