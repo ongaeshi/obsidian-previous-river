@@ -30,8 +30,8 @@ export function getPreviousLinkpath(app: App, file: TFile): string | null {
  */
 export function hasPreviousProperty(app: App, file: TFile): boolean {
   const cache = app.metadataCache.getFileCache(file);
-  const previous = cache?.frontmatter?.previous;
-  return previous !== undefined && previous !== null && previous !== "";
+  if (!cache?.frontmatter) return false;
+  return 'previous' in cache.frontmatter;
 }
 
 /**
