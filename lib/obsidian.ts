@@ -26,6 +26,15 @@ export function getPreviousLinkpath(app: App, file: TFile): string | null {
 }
 
 /**
+ * Check if the file has a `previous` property in its frontmatter.
+ */
+export function hasPreviousProperty(app: App, file: TFile): boolean {
+  const cache = app.metadataCache.getFileCache(file);
+  const previous = cache?.frontmatter?.previous;
+  return previous !== undefined && previous !== null && previous !== "";
+}
+
+/**
  * Retrieve the previous note based on the `previous` property in the frontmatter.
  */
 export function getPreviousNote(app: App, file: TFile): TFile | null {

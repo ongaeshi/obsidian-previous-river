@@ -1,7 +1,7 @@
 import { App, TFile, Notice } from "obsidian";
 import { ConfirmModal } from "./ConfirmModal";
 import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
-import { getActiveFile, getPreviousNote, getNextNotes, getNextNotesWithCache, buildReverseCache, detachNote, setPreviousProperty, findLastNote, findFirstNote, isOnSamePath } from "./obsidian";
+import { getActiveFile, getPreviousNote, getNextNotes, getNextNotesWithCache, buildReverseCache, detachNote, setPreviousProperty, findLastNote, findFirstNote, isOnSamePath, hasPreviousProperty } from "./obsidian";
 import { CanvasGenerator, saveCanvasData } from "./canvas";
 import { ExportFilterModal } from "./ExportFilterModal";
 
@@ -362,7 +362,8 @@ async function generateAllRiversCanvas(app: App) {
         const prev = getPreviousNote(app, file);
         if (!prev) {
             const nexts = getNextNotesWithCache(app, file, reverseCache);
-            if (nexts.length > 0) {
+            const hasPrevProp = hasPreviousProperty(app, file);
+            if (nexts.length > 0 || hasPrevProp) {
                 generator.dfs(file, 0, currentY, 1);
                 currentY = generator.maxUsedY + 1000;
             }
@@ -502,9 +503,10 @@ export function exportFilteredRiversToCanvasCommand(app: App) {
         for (const file of matchedFiles) {
             const prev = getPreviousNote(app, file);
             const nexts = getNextNotesWithCache(app, file, reverseCache);
+            const hasPrevProp = hasPreviousProperty(app, file);
             
             // Skip isolated notes that do not belong to any river
-            if (!prev && nexts.length === 0) {
+            if (!prev && nexts.length === 0 && !hasPrevProp) {
                 continue;
             }
 
