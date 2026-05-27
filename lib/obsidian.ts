@@ -85,7 +85,8 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
     }
 
     // Add only if the `previous` field points to the current note.
-    if (previousLinkText === file.basename || previousLinkText === currentPath) {
+    const dest = app.metadataCache.getFirstLinkpathDest(previousLinkText, targetFile.path);
+    if (dest && dest.path === file.path) {
       nextNotes.push(targetFile);
     }
   }
@@ -167,7 +168,8 @@ export function getNextNotesWithCache(app: App, file: TFile, reverseCache: Recor
     if (!previousLinkText) continue;
 
     // Add only if the `previous` field points to the current note.
-    if (previousLinkText === file.basename || previousLinkText === currentPath) {
+    const dest = app.metadataCache.getFirstLinkpathDest(previousLinkText, targetFile.path);
+    if (dest && dest.path === file.path) {
       nextNotes.push(targetFile);
     }
   }
