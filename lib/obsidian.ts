@@ -26,6 +26,15 @@ export function getPreviousLinkpath(app: App, file: TFile): string | null {
 }
 
 /**
+ * Check if the file has a `previous` property in its frontmatter.
+ */
+export function hasPreviousProperty(app: App, file: TFile): boolean {
+  const cache = app.metadataCache.getFileCache(file);
+  if (!cache?.frontmatter) return false;
+  return 'previous' in cache.frontmatter;
+}
+
+/**
  * Retrieve the previous note based on the `previous` property in the frontmatter.
  */
 export function getPreviousNote(app: App, file: TFile): TFile | null {
@@ -76,7 +85,8 @@ export function getNextNotes(app: App, file: TFile): TFile[] {
     }
 
     // Add only if the `previous` field points to the current note.
-    if (previousLinkText === file.basename || previousLinkText === currentPath) {
+    const dest = app.metadataCache.getFirstLinkpathDest(previousLinkText, targetFile.path);
+    if (dest && dest.path === file.path) {
       nextNotes.push(targetFile);
     }
   }
@@ -158,7 +168,8 @@ export function getNextNotesWithCache(app: App, file: TFile, reverseCache: Recor
     if (!previousLinkText) continue;
 
     // Add only if the `previous` field points to the current note.
-    if (previousLinkText === file.basename || previousLinkText === currentPath) {
+    const dest = app.metadataCache.getFirstLinkpathDest(previousLinkText, targetFile.path);
+    if (dest && dest.path === file.path) {
       nextNotes.push(targetFile);
     }
   }

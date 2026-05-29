@@ -1,6 +1,7 @@
 import { App, Modal, Setting } from "obsidian";
 
 export interface ExportFilterResult {
+    filename: string;
     directory: string;
     tag: string;
     link: string;
@@ -14,6 +15,7 @@ export interface ExportFilterResult {
 let lastExportFilterResult: ExportFilterResult | null = null;
 
 export class ExportFilterModal extends Modal {
+    filename: string;
     directory: string;
     tag: string;
     link: string;
@@ -28,6 +30,7 @@ export class ExportFilterModal extends Modal {
         super(app);
         this.onSubmit = onSubmit;
         if (lastExportFilterResult) {
+            this.filename = lastExportFilterResult.filename;
             this.directory = lastExportFilterResult.directory;
             this.tag = lastExportFilterResult.tag;
             this.link = lastExportFilterResult.link;
@@ -37,6 +40,7 @@ export class ExportFilterModal extends Modal {
             this.maxColumns = lastExportFilterResult.maxColumns;
             this.exportAll = lastExportFilterResult.exportAll;
         } else {
+            this.filename = '';
             this.directory = '';
             this.tag = '';
             this.link = '';
@@ -51,6 +55,14 @@ export class ExportFilterModal extends Modal {
     onOpen() {
         const { contentEl } = this;
         contentEl.createEl("h2", { text: "Export connected notes by filter" });
+
+        const filenameSetting = new Setting(contentEl)
+            .setName("Canvas name")
+            .setDesc("Leave empty to auto-generate based on filters")
+            .addText(text => text
+                .setValue(this.filename)
+                .setPlaceholder("e.g. My Canvas")
+                .onChange(value => this.filename = value));
 
         const dirSetting = new Setting(contentEl)
             .setName("Directory")
@@ -129,6 +141,7 @@ export class ExportFilterModal extends Modal {
                 .onClick(() => {
                     this.close();
                     const result: ExportFilterResult = {
+                        filename: this.filename,
                         directory: this.directory,
                         tag: this.tag,
                         link: this.link,
