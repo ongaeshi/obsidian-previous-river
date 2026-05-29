@@ -1,5 +1,10 @@
 # History
 
+## 1.3.0 (2026-05-29)
+- **Filtered canvas export**: Add custom filename input for filtered canvas export.
+- **Export canvas improvements**: Include notes with an empty `previous` property in exports, and allow exporting isolated notes with a `previous` property to canvas.
+- **Bug fix**: Resolve folder paths correctly when retrieving next notes.
+
 ## 1.2 (2026-05-17)
 - **Documentation**: Rewrote `README.ja.md` to be more clear and concise, and added demo GIFs to showcase plugin features.
 - **English README**: Translated `README.ja.md` to English and updated `README.md`.
