@@ -33,7 +33,7 @@ flowchart LR
 複数の子ノートが `previous` プロパティを介して1つの親ノートを指すことで、親子構造を作成します。親ノート側で `Insert base to collect next notes` コマンドを使用することで、子ノートの一覧を動的に表示できます。
 
 ```mermaid
-flowchart TD
+flowchart BT
     Parent["Parent Note<br>(Contains base block to list children)"]
     Child1[Child Note 1]
     Child2[Child Note 2]

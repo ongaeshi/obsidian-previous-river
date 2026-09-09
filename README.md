@@ -32,7 +32,7 @@ flowchart LR
 Create a parent-child structure by having multiple child notes point to a single parent note via the `previous` property. You can then use the `Insert base to collect next notes` command in the parent note to display a dynamically updated list of all its children.
 
 ```mermaid
-flowchart TD
+flowchart BT
     Parent["Parent Note<br>(Contains base block to list children)"]
     Child1[Child Note 1]
     Child2[Child Note 2]
