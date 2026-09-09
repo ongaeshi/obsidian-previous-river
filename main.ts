@@ -13,7 +13,8 @@ import {
   exportAllRiversToCanvasCommand,
   exportFilteredRiversToCanvasCommand,
   setRootCommand,
-  duplicateNextNoteCommand
+  duplicateNextNoteCommand,
+  createNextNoteCommand
 } from "./lib/commands";
 import { getNextNotes } from "./lib/obsidian";
 
@@ -101,6 +102,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "duplicate-next-note",
       name: "Duplicate next note",
       callback: () => duplicateNextNoteCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "create-next-note",
+      name: "Create next note",
+      callback: () => createNextNoteCommand(this.app),
     });
 
     this.app.workspace.onLayoutReady(() => {
