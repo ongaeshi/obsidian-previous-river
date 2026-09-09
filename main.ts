@@ -13,8 +13,10 @@ import {
   exportAllRiversToCanvasCommand,
   exportFilteredRiversToCanvasCommand,
   setRootCommand,
+  setNoteToPreviousPropertyCommand,
   duplicateNextNoteCommand,
-  createNextNoteCommand
+  createNextNoteCommand,
+  insertBaseNextNotesCommand
 } from "./lib/commands";
 import { getNextNotes } from "./lib/obsidian";
 
@@ -99,6 +101,12 @@ export default class PreviousRiverPlugin extends Plugin {
     });
 
     this.addCommand({
+      id: "set-note-to-previous-property",
+      name: "Set note to previous property",
+      callback: () => setNoteToPreviousPropertyCommand(this.app),
+    });
+
+    this.addCommand({
       id: "duplicate-next-note",
       name: "Duplicate next note",
       callback: () => duplicateNextNoteCommand(this.app),
@@ -108,6 +116,12 @@ export default class PreviousRiverPlugin extends Plugin {
       id: "create-next-note",
       name: "Create next note",
       callback: () => createNextNoteCommand(this.app),
+    });
+
+    this.addCommand({
+      id: "insert-base-next-notes",
+      name: "Insert base next notes",
+      editorCallback: (editor, view) => insertBaseNextNotesCommand(this.app, editor, view),
     });
 
     this.app.workspace.onLayoutReady(() => {

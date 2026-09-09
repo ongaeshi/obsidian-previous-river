@@ -1,9 +1,35 @@
-import { App, TFile, Notice } from "obsidian";
+import { App, TFile, Notice, Editor, MarkdownView } from "obsidian";
 import { ConfirmModal } from "./ConfirmModal";
 import { NextNoteSuggestModal } from "./NextNoteSuggestModal";
 import { getActiveFile, getPreviousNote, getNextNotes, getNextNotesWithCache, buildReverseCache, detachNote, setPreviousProperty, findLastNote, findFirstNote, isOnSamePath, hasPreviousProperty } from "./obsidian";
 import { CanvasGenerator, saveCanvasData } from "./canvas";
 import { ExportFilterModal } from "./ExportFilterModal";
+
+export function insertBaseNextNotesCommand(app: App, editor: Editor, view: MarkdownView) {
+    const file = getActiveFile(app);
+    if (!file) {
+        return;
+    }
+
+    const baseCode = `\`\`\`base
+views:
+  - type: list
+    name: リスト
+    filters:
+      and:
+        - previous == link("${file.basename}")
+\`\`\`
+`;
+    const cursor = editor.getCursor();
+    editor.replaceRange(baseCode, cursor);
+    
+    // Move cursor past the inserted code block
+    editor.setCursor({
+        line: cursor.line + 8,
+        ch: 0
+    });
+}
+
 
 export async function goToPreviousNoteCommand(app: App) {
     const file = getActiveFile(app);
@@ -633,4 +659,27 @@ export async function setRootCommand(app: App) {
     });
 
     new Notice(`Set ROOT to previous property of ${file.basename}`);
+}
+
+export async function setNoteToPreviousPropertyCommand(app: App) {
+    const file = getActiveFile(app);
+    if (!file) {
+        return;
+    }
+
+    const selectedNote = await new Promise<TFile | null>((resolve) => {
+        new NextNoteSuggestModal(app, getSortedMarkdownFiles(app), resolve, "Select previous note...").open();
+    });
+
+    if (!selectedNote) {
+        return;
+    }
+
+    if (file === selectedNote) {
+        new Notice("Cannot set the note itself as previous.");
+        return;
+    }
+
+    await setPreviousProperty(app, file, selectedNote.basename);
+    new Notice(`Set ${selectedNote.basename} to previous property of ${file.basename}`);
 }
