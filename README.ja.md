@@ -24,7 +24,9 @@ Previous River は `previous` プロパティを使ってノート同士を繋�
 
 ```mermaid
 flowchart LR
-    A[Note 1] <-- previous --- B[Note 2] <-- previous --- C[Note 3] <-- previous --- D[Note 4]
+    B[Note 2] -- previous --> A[Note 1]
+    C[Note 3] -- previous --> B[Note 2]
+    D[Note 4] -- previous --> C[Note 3]
 ```
 
 #### 2. 階層構造 (1.4からの新機能)
@@ -32,14 +34,14 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    Parent["Parent Note\n(Contains base block to list children)"]
+    Parent["Parent Note<br>(Contains base block to list children)"]
     Child1[Child Note 1]
     Child2[Child Note 2]
     Child3[Child Note 3]
 
-    Child1 <-- previous --- Parent
-    Child2 <-- previous --- Parent
-    Child3 <-- previous --- Parent
+    Child1 -- previous --> Parent
+    Child2 -- previous --> Parent
+    Child3 -- previous --> Parent
 ```
 
 ### その他の主要機能

@@ -23,7 +23,9 @@ Connect notes in a continuous sequence by linking each note to its predecessor. 
 
 ```mermaid
 flowchart LR
-    A[Note 1] <-- previous --- B[Note 2] <-- previous --- C[Note 3] <-- previous --- D[Note 4]
+    B[Note 2] -- previous --> A[Note 1]
+    C[Note 3] -- previous --> B[Note 2]
+    D[Note 4] -- previous --> C[Note 3]
 ```
 
 #### 2. Hierarchical Notes (New in 1.4)
@@ -31,14 +33,14 @@ Create a parent-child structure by having multiple child notes point to a single
 
 ```mermaid
 flowchart TD
-    Parent["Parent Note\n(Contains base block to list children)"]
+    Parent["Parent Note<br>(Contains base block to list children)"]
     Child1[Child Note 1]
     Child2[Child Note 2]
     Child3[Child Note 3]
 
-    Child1 <-- previous --- Parent
-    Child2 <-- previous --- Parent
-    Child3 <-- previous --- Parent
+    Child1 -- previous --> Parent
+    Child2 -- previous --> Parent
+    Child3 -- previous --> Parent
 ```
 
 ### Other Core Features
