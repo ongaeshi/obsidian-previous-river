@@ -23,7 +23,7 @@ Previous River は `previous` プロパティを使ってノート同士を繋�
 ノートを前のノートにリンクすることで、連続したシーケンスを作成します。ジャーナルや手順書、思考の連なりなどに最適です。
 
 ```mermaid
-flowchart LR
+flowchart RL
     B[Note 2] -- previous --> A[Note 1]
     C[Note 3] -- previous --> B[Note 2]
     D[Note 4] -- previous --> C[Note 3]

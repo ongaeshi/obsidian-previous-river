@@ -22,7 +22,7 @@ Previous River uses the `previous` property to connect notes, allowing you to bu
 Connect notes in a continuous sequence by linking each note to its predecessor. This is ideal for journals, step-by-step guides, or a chain of thought.
 
 ```mermaid
-flowchart LR
+flowchart RL
     B[Note 2] -- previous --> A[Note 1]
     C[Note 3] -- previous --> B[Note 2]
     D[Note 4] -- previous --> C[Note 3]
