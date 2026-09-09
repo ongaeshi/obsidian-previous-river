@@ -120,7 +120,7 @@ export default class PreviousRiverPlugin extends Plugin {
 
     this.addCommand({
       id: "insert-base-next-notes",
-      name: "Insert base next notes",
+      name: "Insert base to collect next notes",
       editorCallback: (editor, view) => insertBaseNextNotesCommand(this.app, editor, view),
     });
 
